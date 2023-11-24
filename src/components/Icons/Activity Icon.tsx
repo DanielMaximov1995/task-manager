@@ -17,8 +17,8 @@ const ActivityIcon = ({fontSize, color}: IconsType) => {
             xmlns="http://www.w3.org/2000/svg"
             width="1em"
             height="1em"
-            stroke="none"
-            fill="currentColor"
+            stroke="currentColor"
+            fill="none"
             strokeWidth={2}
             viewBox="0 0 24 24"
         >

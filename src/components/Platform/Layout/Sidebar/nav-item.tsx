@@ -20,21 +20,21 @@ const NavItem = (props: NavItemProps) => {
     const pathname = usePathname()
 
     const routes = [
-        { label : "לוחות" , icon : <span className='ml-2'><LayoutIcon fontSize={25}/></span> , href : `/organization/${organization._id}` },
-        { label : "פעילוץ" , icon : <span className='ml-2'><ActivityIcon fontSize={25}/></span> , href : `/organization/${organization._id}/activity` },
-        { label : "הגדרותד" , icon : <span className='ml-2'><SettingIcon fontSize={25}/></span> , href : `/organization/${organization._id}/settings` },
+        { label : "לוחות" , icon : <span className='ml-2'><LayoutIcon fontSize={25}/></span> , href : `/org/${organization.slug}` },
+        { label : "פעילות" , icon : <span className='ml-2'><ActivityIcon fontSize={25}/></span> , href : `/org/${organization.slug}/activity` },
+        { label : "הגדרות" , icon : <span className='ml-2'><SettingIcon fontSize={25}/></span> , href : `/org/${organization.slug}/settings` },
     ]
 
 
     return (
-        <AccordionItem value={organization?._id?.toString()!} className='border-none'>
+        <AccordionItem value={organization?.slug} className='border-none'>
             <AccordionTrigger
-                onClick={() => onExpand(organization?._id?.toString()!)}
+                onClick={() => onExpand(organization?.slug)}
                 className={`flex items-center gap-x-2 p-1.5 text-neutral-700 ${isActive && !isExpanded && "bg-sky-500/10 text-sky-700"} rounded-md hover:bg-neutral-500/10 effect text-start no-underline hover:no-underline`}
             >
             <div className='flex items-center gap-x-2'>
                 <div className='w-7 h-7 relative'>
-                    <Image fill src={organization.imageUrl} alt='organization' className='rounded-sm object-cover'/>
+                    <Image fill src={organization.imageUrl} alt='organization' className='rounded-sm object-contain'/>
                 </div>
                 <span className='font-medium text-sm'>{organization.name}</span>
             </div>

@@ -8,7 +8,7 @@ const strokes = {
     info: 'stroke-white'
 }
 
-const LayoutIcon = ({fontSize, color}: IconsType) => {
+const PlusIcon = ({fontSize, color}: IconsType) => {
 
     return (
         <svg
@@ -17,16 +17,14 @@ const LayoutIcon = ({fontSize, color}: IconsType) => {
             xmlns="http://www.w3.org/2000/svg"
             width="1em"
             height="1em"
-            stroke="currentColor"
-            fill="none"
+            stroke="none"
+            fill="currentColor"
             strokeWidth={2}
             viewBox="0 0 24 24"
         >
-                <rect height="18" rx="2" ry="2" width="18" x="3" y="3" />
-                <line x1="3" x2="21" y1="9" y2="9" />
-                <line x1="9" x2="9" y1="21" y2="9" />
+                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
         </svg>
     );
 };
 
-export default LayoutIcon
+export default PlusIcon

@@ -19,7 +19,6 @@ export type OrganizationModelType = {
     slug : string;
     imageUrl : string;
     name : string;
-    description : string;
-    admin : string;
+    admin ?: string[];
     members : string[];
 }

@@ -34,7 +34,7 @@ const Navbar = () => {
                 <div className='space-x-4 md:block md:w-auto flex items-center justify-between w-full'>
                     <Button size='sm' variant='outline' asChild>
                         <RestrictedContentAuth fullback={ButtonOfNav}>
-                            <Link href={isLogin ? '/platform' : '/sign-in'} className='font-semibold'>
+                            <Link href={isLogin ? '/org' : '/sign-in'} className='font-semibold'>
                                 { isLogin ? "למנהל המשימות" : "התחברות" }
                             </Link>
                         </RestrictedContentAuth>

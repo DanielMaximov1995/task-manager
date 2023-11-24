@@ -12,11 +12,14 @@ type FloatType = {
     type?: string;
     input: "text" | "password" | "textarea";
     tel ?: boolean
+    className ?: string;
 }
+
+import { cn } from "@/utils/shadcn-utils"
 
 
 const FloatLabelText = (props: FloatType) => {
-    const {handleChange, label, name, value, type, input , tel } = props
+    const {handleChange, label, name, value, className , type, input , tel } = props
     const [showPass, setShowPass] = useState<boolean>(false);
 
     const options = {
@@ -28,7 +31,7 @@ const FloatLabelText = (props: FloatType) => {
             placeholder=''
             onChange={handleChange}
             inputMode={tel ? 'tel' : undefined}
-            className='input peer no-spinners'
+            className={cn('input peer no-spinners', className)}
         />,
         password : <>
             <span className="absolute inset-y-0  left-0 flex items-center pl-2 text-3xl text-neutral-400">
@@ -43,7 +46,7 @@ const FloatLabelText = (props: FloatType) => {
                 value={value}
                 placeholder=''
                 onChange={handleChange}
-                className='input peer'
+                className={cn('input peer' , className)}
             />
         </>,
         textarea : <textarea
@@ -52,7 +55,7 @@ const FloatLabelText = (props: FloatType) => {
                 value={value}
                 placeholder=''
                 onChange={handleChange}
-                className='input peer h-14 py-1'
+                className={cn('input peer h-14 py-1' , className)}
             />
     }
 

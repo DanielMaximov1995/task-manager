@@ -3,26 +3,32 @@ import { useLocalStorage } from 'usehooks-ts'
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import {Accordion} from "@/components/ui/accordion";
+import {PageAndLayoutType} from "@/types/others";
+import NavItem from "@/components/Platform/Layout/Sidebar/nav-item";
+import PlusIcon from "@/components/Icons/Plus Icon";
+import {useEffect} from "react";
 
 type SideBarProps = {
     storageKey ?: string;
-}
+    slug ?: string;
+} & PageAndLayoutType
 
 const Sidebar = (props : SideBarProps) => {
-    const { storageKey = "t-sidebar-state" } = props
+    const { storageKey = "t-sidebar-state" , organizations , slug} = props
     const [expanded, setExpanded] = useLocalStorage<Record<string, any>>(storageKey , {})
 
     const defaultAccordionValue : string[] = Object.keys(expanded).reduce((acc : string[] , key : string) => {
+        console.log(acc)
         if(expanded[key]) {
             acc.push(key)
         }
         return acc
     },[])
 
-    const onExpanded = (id : string) => {
+    const onExpanded = (slugItem : string) => {
         setExpanded((curr) => ({
             ...curr,
-            [id] : !expanded[id]
+            [slugItem] : !expanded[slugItem]
         }))
     }
 
@@ -37,8 +43,8 @@ const Sidebar = (props : SideBarProps) => {
                 variant='ghost'
                 className='mr-auto'
                 >
-                    <Link href='/select-org'>
-                        +
+                    <Link href='/org'>
+                        <PlusIcon fontSize={30}/>
                     </Link>
                 </Button>
             </div>
@@ -47,7 +53,15 @@ const Sidebar = (props : SideBarProps) => {
             defaultValue={defaultAccordionValue}
             className='apace-y-2'
             >
-
+                {organizations?.map((organization , index) => {
+                    return <NavItem
+                        key={organization?.slug}
+                        isActive={decodeURIComponent(slug!) === organization.slug}
+                        isExpanded={expanded[organization.slug]}
+                        organization={organization}
+                        onExpand={onExpanded}
+                    />
+                })}
             </Accordion>
         </>
     )

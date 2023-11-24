@@ -30,7 +30,7 @@ type InputProps = {
 
 const ERROR_MESSAGES = {
     fileTooLarge(maxSize: number) {
-        return `The file is too large. Max size is ${formatFileSize(maxSize)}.`;
+        return `הקובץ גדול מדי. גודל מקסימלי הוא ${formatFileSize(maxSize)}.`;
     },
     fileInvalidType() {
         return 'Invalid file type.';
@@ -178,7 +178,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 );
 SingleImageDropzone.displayName = 'SingleImageDropzone';
 
-function formatFileSize(bytes?: number) {
+const formatFileSize = (bytes?: number) => {
     if (!bytes) {
         return '0 Bytes';
     }
@@ -193,4 +193,4 @@ function formatFileSize(bytes?: number) {
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-export { SingleImageDropzone };
+export { SingleImageDropzone , formatFileSize };

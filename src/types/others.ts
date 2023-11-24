@@ -1,10 +1,12 @@
 import {ReactNode , ChangeEvent } from "react";
+import {OrganizationModelType} from "@/types/Schema";
 
 export type PageAndLayoutType = {
-    children ?: ReactNode;
+    children ?: ReactNode | JSX.Element;
     params ?: { [key: string]: string };
     searchParams ?: { [key: string]: string };
-    fullback ?: JSX.Element
+    fullback ?: JSX.Element;
+    organizations ?: OrganizationModelType[]
 }
 
 export type IconsType = {
@@ -26,7 +28,7 @@ export type CustomEventTarget = {
 export type CustomEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement> & {
     target?: {
         name: string;
-        value: string;
+        value: any;
         id?: string;
     };
 };

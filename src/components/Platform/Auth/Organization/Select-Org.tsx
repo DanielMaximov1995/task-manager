@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import Link from "next/link";
 
 const SelectOrg = () => {
+
+
     return (
         <div className='flex flex-wrap'>
             <div className='p-2 py-4 w-full'>
@@ -24,7 +26,7 @@ const SelectOrg = () => {
             </div>
             <div className='w-full p-2'>
                 <Button className='w-full text-lg' variant='outline' asChild>
-                    <Link href='select-org/add-org'>
+                    <Link href='?addNew=true'>
                     סביבת עבודה חדשה
                     </Link>
                 </Button>

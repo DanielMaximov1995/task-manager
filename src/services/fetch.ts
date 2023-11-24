@@ -1,8 +1,11 @@
 'use server'
 import bcrypt from "bcryptjs"
-import {ObjectIdType, UserModelType} from "@/types/Schema"
+import {ObjectIdType, OrganizationModelType, UserModelType} from "@/types/Schema"
 import UserModel from "@/utils/Database/models/UserModel"
 import {PasswordEmailType} from "@/types/others";
+import OrganizationModel from "../utils/Database/models/OrganizationModel";
+import {getServerSession , Session } from "next-auth";
+import { authOptions } from '@/utils/authOptions'
 
 export const getUsers =  async () => {
     try {
@@ -95,3 +98,66 @@ export const deleteUser = async ( email : string) => {
         throw error;
     }
 };
+
+export const getAllOrganization = async () => {
+    try {
+        let data = await OrganizationModel.find()
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getOrganizationByEmail = async () => {
+    try {
+        const session : Session | null = await getServerSession(authOptions)
+        let data = await OrganizationModel.find()
+        let getByEmail = data.filter(org => org.members.includes(session?.user?.email))
+        return JSON.parse(JSON.stringify(getByEmail))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getOrganizationSlug =  async (slug : string) => {
+    try {
+        let data = await OrganizationModel.findById(slug)
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const addNewOrganization =  async (data : OrganizationModelType) => {
+    try {
+        const session : Session | null= await getServerSession(authOptions)
+
+        if(!session) {
+            throw Error('רק משתמש מחובר יכול להוסיף ארגון !' )
+        }
+
+        let findOrg = await OrganizationModel.findOne({slug : data.slug})
+        if(findOrg) {
+            throw Error('ארגון בשם הזה כבר קיים !' )
+        }
+
+        const newOrg = await OrganizationModel.create({
+            ...data,
+            admin : [session?.user?._id],
+            members : [...data.members , session?.user?.email]
+        });
+
+        return JSON.parse(JSON.stringify({ newOrg , message : 'הארגון התווסף בהצלחה !' }))
+    } catch (error) {
+        throw error;
+    }
+}
+
+// export const updateUser = async (id : ObjectIdType , data: UserModelType) => {
+//     try {
+//         await UserModel.findOneAndUpdate({ _id: id }, data);
+//         return JSON.parse(JSON.stringify({ message : 'התעדכן בהצלחה' }));
+//     } catch (err) {
+//         throw err;
+//     }
+// }
