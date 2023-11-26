@@ -1,35 +1,43 @@
 'use client'
-import { useLocalStorage } from 'usehooks-ts'
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-import {Accordion} from "@/components/ui/accordion";
 import {PageAndLayoutType} from "@/types/others";
 import NavItem from "@/components/Platform/Layout/Sidebar/nav-item";
 import PlusIcon from "@/components/Icons/Plus Icon";
-import {useEffect} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {Accordion} from "@/components/ui/accordion";
+import {useEffect, useState} from "react";
+import {getOrganizationByEmail} from "@/services/fetch";
+import {OrganizationModelType} from "@/types/Schema";
+import {useOrganization} from "@/hooks/use-Organization";
+import {Skeleton} from "@/components/ui/skeleton";
 
-type SideBarProps = {
+export type SideBarProps = {
     storageKey ?: string;
     slug ?: string;
 } & PageAndLayoutType
 
-const Sidebar = (props : SideBarProps) => {
-    const { storageKey = "t-sidebar-state" , organizations , slug} = props
-    const [expanded, setExpanded] = useLocalStorage<Record<string, any>>(storageKey , {})
+const Sidebar = () => {
+    const params = useParams()
+    const slug : any = params?.orgId
+    const { organizations, loading } = useOrganization();
+    const [expanded, setExpanded] = useState(decodeURIComponent(slug));
+    const router = useRouter()
 
-    const defaultAccordionValue : string[] = Object.keys(expanded).reduce((acc : string[] , key : string) => {
-        console.log(acc)
-        if(expanded[key]) {
-            acc.push(key)
-        }
-        return acc
-    },[])
-
-    const onExpanded = (slugItem : string) => {
-        setExpanded((curr) => ({
-            ...curr,
-            [slugItem] : !expanded[slugItem]
-        }))
+    if(loading) {
+        return (
+            <>
+                <div className='flex items-center justify-between mb-2'>
+                    <Skeleton className='h-10 w-[50%]'/>
+                    <Skeleton className='h-10 w-10'/>
+                </div>
+                <div className='space-y-2'>
+                    <NavItem.Skeleton/>
+                    <NavItem.Skeleton/>
+                    <NavItem.Skeleton/>
+                </div>
+            </>
+        )
     }
 
     return (
@@ -50,18 +58,20 @@ const Sidebar = (props : SideBarProps) => {
             </div>
             <Accordion
             type='multiple'
-            defaultValue={defaultAccordionValue}
+            defaultValue={[expanded!]}
             className='apace-y-2'
             >
-                {organizations?.map((organization , index) => {
-                    return <NavItem
-                        key={organization?.slug}
-                        isActive={decodeURIComponent(slug!) === organization.slug}
-                        isExpanded={expanded[organization.slug]}
-                        organization={organization}
-                        onExpand={onExpanded}
-                    />
-                })}
+                {
+                    organizations?.map((organization , index) => {
+                        return <NavItem
+                            key={organization?.slug}
+                            isActive={decodeURIComponent(slug!) === organization.slug}
+                            isExpanded={!!expanded}
+                            organization={organization}
+                            onExpand={() => setExpanded(organization?.slug)}
+                        />
+                    })
+                }
             </Accordion>
         </>
     )

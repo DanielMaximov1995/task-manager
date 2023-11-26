@@ -9,11 +9,15 @@ import { toast } from 'sonner';
 import { updateUser} from "@/services/fetch";
 import {useSession} from "next-auth/react";
 import {useEdgeStore} from "@/utils/edgeStore";
+import {useRouter} from "next/navigation";
+import {useUsers} from "@/hooks/use-Users";
 
 const EditAccount = ({ user } : { user : UserModelType | null | undefined }) => {
     const [form, setForm] = useState<UserModelType>(user!);
     const { update } = useSession()
     const { edgestore } = useEdgeStore();
+    const { onCreateUsers } = useUsers()
+    const router = useRouter()
 
     const handleChange = (e: CustomEvent | CustomEventTarget) => {
         const { name, value } = e.target;
@@ -32,6 +36,7 @@ const EditAccount = ({ user } : { user : UserModelType | null | undefined }) => 
         toast.promise(updateUser(user?._id , updateData),{
             loading : "מעדכן פרטים...",
             success : async () => {
+                onCreateUsers()
                 await update(updateData)
                 if(updateData.avatar) {
                     await edgestore.publicFiles.confirmUpload({

@@ -121,7 +121,7 @@ export const getOrganizationByEmail = async () => {
 
 export const getOrganizationSlug =  async (slug : string) => {
     try {
-        let data = await OrganizationModel.findById(slug)
+        let data = await OrganizationModel.findOne({slug})
         return JSON.parse(JSON.stringify(data))
     } catch (error) {
         throw error;
@@ -141,10 +141,16 @@ export const addNewOrganization =  async (data : OrganizationModelType) => {
             throw Error('ארגון בשם הזה כבר קיים !' )
         }
 
-        const newOrg = await OrganizationModel.create({
+        let newOrgData = {
             ...data,
-            admin : [session?.user?._id],
-            members : [...data.members , session?.user?.email]
+            admin : [session?.user?.email.toLowerCase()],
+            members : [...data?.members.map(email => email.toLowerCase()) , session?.user?.email.toLowerCase()]
+        }
+
+        let newOrg = await OrganizationModel.create({
+            ...newOrgData,
+            admin : Array.from(new Set<string>(newOrgData.admin)),
+            members : Array.from(new Set<string>(newOrgData.members))
         });
 
         return JSON.parse(JSON.stringify({ newOrg , message : 'הארגון התווסף בהצלחה !' }))
@@ -153,11 +159,15 @@ export const addNewOrganization =  async (data : OrganizationModelType) => {
     }
 }
 
-// export const updateUser = async (id : ObjectIdType , data: UserModelType) => {
-//     try {
-//         await UserModel.findOneAndUpdate({ _id: id }, data);
-//         return JSON.parse(JSON.stringify({ message : 'התעדכן בהצלחה' }));
-//     } catch (err) {
-//         throw err;
-//     }
-// }
+export const updateOrganization = async (slug : string , data: OrganizationModelType) => {
+    try {
+        if(data.members.length === 0) {
+            await OrganizationModel.findOneAndDelete({slug})
+        }
+
+        await OrganizationModel.findOneAndUpdate({ slug }, data);
+        return JSON.parse(JSON.stringify({ message : 'התעדכן בהצלחה' }));
+    } catch (err) {
+        throw err;
+    }
+}

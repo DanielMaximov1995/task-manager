@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {OrganizationModelType} from "@/types/Schema";
 import {useState, useEffect, ChangeEvent} from 'react'
 import FloatLabelText from "@/components/Float Label Text";
-import {CustomEvent, CustomEventTarget} from "@/types/others";
+import {CustomEvent, CustomEventTarget, PageAndLayoutType} from "@/types/others";
 import {createSlug} from "@/services/slugIt";
 import { Button } from '@/components/ui/button'
 import {addNewOrganization} from "@/services/fetch";

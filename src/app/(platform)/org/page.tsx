@@ -5,11 +5,11 @@ import {PageAndLayoutType} from "@/types/others";
 import SelectOrg from "@/components/Platform/Auth/Organization/Select-Org";
 import AddOrg from "@/components/Platform/Auth/Organization/Add-Org";
 import {getOrganizationByEmail} from "@/services/fetch";
+import {OrganizationModelType} from "@/types/Schema";
 
 const OrgPage = async (props : PageAndLayoutType) => {
     const { searchParams } = props
     let addNew  = (!!searchParams?.addNew).toString() as 'true' | 'false'
-    let organization = await getOrganizationByEmail()
 
     const options = {
         true : { label : "יצירת ארגון חדש" , component : AddOrg },

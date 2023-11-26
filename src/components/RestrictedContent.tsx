@@ -5,6 +5,7 @@ import {useEffect, useState, FC, ReactNode} from 'react'
 import {OrganizationModelType} from "../types/Schema";
 import {getAllOrganization, getOrganizationByEmail} from "../services/fetch";
 import {PageAndLayoutType} from "@/types/others";
+import {useOrganization} from "@/hooks/use-Organization";
 
 const RestrictedContent: FC<PageAndLayoutType> = (props) => {
     const { children, params } = props;
@@ -14,9 +15,11 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
     const isNotLoginIn = status === "unauthenticated";
     const pathname = usePathname();
     const router = useRouter();
+    const { onCreate } = useOrganization();
 
     useEffect(() => {
         const getOrganization = async () => {
+            onCreate()
             let data = await getOrganizationByEmail();
             if (isLoginIn && data.length === 0 && pathname !== "/org") {
                 router.push('/org');

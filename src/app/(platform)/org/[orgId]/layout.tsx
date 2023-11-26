@@ -6,7 +6,6 @@ import { getOrganizationByEmail} from "@/services/fetch";
 
 const Layout = async (props : PageAndLayoutType) => {
     const { children , params } = props
-    const organizations = await getOrganizationByEmail()
 
     return (
         <RestrictedContent params={params}>
@@ -15,7 +14,7 @@ const Layout = async (props : PageAndLayoutType) => {
             <main className='pt-20 md:pt-24 px-4 max-w-6xl 2xl:max-w-screen-xl mx-auto'>
                 <div className='flex gap-x-7'>
                     <div className='w-64 shrink-0 hidden md:block'>
-                        <Sidebar organizations={organizations} slug={params?.orgId}/>
+                        <Sidebar/>
                     </div>
                 {children}
                 </div>
