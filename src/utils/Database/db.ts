@@ -7,10 +7,7 @@ export const dbConnect = async () => {
     }
 
     try {
-        await mongoose.connect(MONGO_URI , {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        } as ConnectOptions)
+        await mongoose.connect(MONGO_URI)
     } catch (err) {
         console.error(err)
     }

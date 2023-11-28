@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import RestrictedContentAuth from "@/components/RestrictedContentAuth";
+import {redirect} from "next/navigation";
 
 type ButtonOptions = {
     label: string;
@@ -21,6 +22,9 @@ const Navbar = () => {
     };
 
 
+    if(isLogin) {
+        return redirect('/org')
+    }
 
     const ButtonOfNav = <Link href={optionsButton[isLogin.toString()]?.href} className='font-semibold'>
         {optionsButton[isLogin.toString()]?.label}

@@ -1,11 +1,13 @@
 'use server'
 import bcrypt from "bcryptjs"
-import {ObjectIdType, OrganizationModelType, UserModelType} from "@/types/Schema"
+import {BoardModelType, ListModelType, ObjectIdType, OrganizationModelType, UserModelType} from "@/types/Schema"
 import UserModel from "@/utils/Database/models/UserModel"
 import {PasswordEmailType} from "@/types/others";
 import OrganizationModel from "../utils/Database/models/OrganizationModel";
 import {getServerSession , Session } from "next-auth";
 import { authOptions } from '@/utils/authOptions'
+import BoardModel from "@/utils/Database/models/BoardModel";
+import ListModel from "@/utils/Database/models/ListModel";
 
 export const getUsers =  async () => {
     try {
@@ -108,6 +110,15 @@ export const getAllOrganization = async () => {
     }
 }
 
+export const getOrganizationById =  async (id : string) => {
+    try {
+        let data = await OrganizationModel.findById(id)
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getOrganizationByEmail = async () => {
     try {
         const session : Session | null = await getServerSession(authOptions)
@@ -167,6 +178,156 @@ export const updateOrganization = async (slug : string , data: OrganizationModel
 
         await OrganizationModel.findOneAndUpdate({ slug }, data);
         return JSON.parse(JSON.stringify({ message : 'התעדכן בהצלחה' }));
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getAllBoards = async () => {
+    try {
+        let data = await BoardModel.find()
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getBoardsById = async (id : string) => {
+    try {
+        let data = await BoardModel.findById(id)
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getBoardsByOrgId = async (orgId : string) => {
+    try {
+        let data = await BoardModel.find({orgId})
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const addNewBoard = async (data : BoardModelType) => {
+    try {
+        await BoardModel.create(data);
+
+        return JSON.parse(JSON.stringify({message : 'הלוח התווסף בהצלחה !'}))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const updateBoard = async (id : string , data: BoardModelType) => {
+    try {
+        if(!data.title) {
+            throw Error("חובה לצרף כותרת !")
+        }
+
+        await BoardModel.findByIdAndUpdate(id, data);
+        return JSON.parse(JSON.stringify({ message : 'הלוח התעדכן בהצלחה' }));
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const deleteBoard = async (id : string) => {
+    try {
+        await BoardModel.findByIdAndDelete(id);
+        return JSON.parse(JSON.stringify({ message : 'הלוח נמחק בהצלחה' }));
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const getAllList = async () => {
+    try {
+        let data = await ListModel.find()
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getListById = async (id : string) => {
+    try {
+        let data = await ListModel.findById(id)
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getListByBordId = async (boardId : string) => {
+    try {
+        let data = await ListModel.find({boardId})
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const addNewList = async (data : ListModelType) => {
+    try {
+        let listCounter = await ListModel.countDocuments()
+        const findByBoard = await ListModel.find({boardId : data.boardId})
+        const checkListTitleExist = findByBoard.find(board => board.title === data.title)
+
+        if(checkListTitleExist) {
+            throw Error("רשימה בשם הזה כבר קיים!")
+        }
+
+        await ListModel.create({
+            ...data,
+            order : listCounter++
+        });
+
+        return JSON.parse(JSON.stringify({message : 'הרשימה התווספה בהצלחה !'}))
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const cloneList = async (data : ListModelType) => {
+    try {
+        const { _id, order, createdAt , updatedAt , ...clonedList } = data;
+
+        let listCounter = await ListModel.countDocuments()
+
+        await ListModel.create({
+            ...clonedList,
+            title : `${data.title} העתק`,
+            order : listCounter++
+        });
+
+        return JSON.parse(JSON.stringify({message : `${data.title} שוכפל בהצלחה !`}))
+    } catch (err) {
+        throw err
+    }
+}
+
+export const updateList = async (id : string , data: ListModelType) => {
+    try {
+        const findByBoard = await ListModel.find({boardId : data.boardId})
+        const checkListTitleExist = findByBoard.find(board => board.title === data.title)
+
+        if(checkListTitleExist) {
+            throw Error("רשימה בשם הזה כבר קיים!")
+        }
+
+        await ListModel.findByIdAndUpdate(id, data);
+        return JSON.parse(JSON.stringify({ message : 'הרשימה התעדכנה בהצלחה' }));
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const deleteList = async (id : string) => {
+    try {
+        await ListModel.findByIdAndDelete(id);
+        return JSON.parse(JSON.stringify({ message : 'הרשימה נמחקה בהצלחה' }));
     } catch (err) {
         throw err;
     }

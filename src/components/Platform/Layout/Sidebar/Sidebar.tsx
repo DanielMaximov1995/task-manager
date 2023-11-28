@@ -42,8 +42,8 @@ const Sidebar = () => {
 
     return (
         <>
-            <div className='font-medium text-xs flex items-center mb-1'>
-                <span className='pr-4'>חללי עבודה</span>
+            <div className='font-medium flex items-center mb-1'>
+                <span className='pr-4 text-lg font-semibold'>חללי עבודה</span>
                 <Button
                 asChild
                 type='button'

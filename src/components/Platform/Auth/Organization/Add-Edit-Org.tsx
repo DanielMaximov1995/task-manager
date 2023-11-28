@@ -6,14 +6,17 @@ import FloatLabelText from "@/components/Float Label Text";
 import {CustomEvent, CustomEventTarget, PageAndLayoutType} from "@/types/others";
 import {createSlug} from "@/services/slugIt";
 import { Button } from '@/components/ui/button'
-import {addNewOrganization} from "@/services/fetch";
+import {addNewOrganization, updateOrganization} from "@/services/fetch";
 import {useEdgeStore} from "@/utils/edgeStore";
 import {toast} from "sonner";
 import {Progress} from "@/components/ui/progress";
 import {formatFileSize} from "@/components/Upload Files/Single Image Dropzone";
 import {useRouter} from "next/navigation";
 
-const AddOrg = () => {
+export type OrgPropsType = {organization ?: OrganizationModelType}
+
+const AddEditOrg = (props : OrgPropsType) => {
+    const { organization } = props
     const [org, setOrg] = useState<OrganizationModelType>({
         name : "",
         slug : "",
@@ -23,6 +26,12 @@ const AddOrg = () => {
     const { edgestore } = useEdgeStore();
     const [progress, setProgress] = useState<number>(0);
     const router = useRouter()
+
+    useEffect(() => {
+        if(organization) {
+            setOrg(organization)
+        }
+    },[])
 
     useEffect(() => {
         setOrg((prev) => ({
@@ -79,7 +88,33 @@ const AddOrg = () => {
         }
     }
 
+    const handleEditSubmit = () => {
+        if(!org.name || !org.slug) {
+            return toast.error("חובה לרשום שם עבור הארגון!")
+        }
+
+        toast.promise(updateOrganization(organization?.slug! , org),{
+            loading : `מעדכן את ${org.name}...`,
+            success : async (data) => {
+                if(org.imageUrl && org.imageUrl !== organization?.imageUrl) {
+                    await edgestore.publicFiles.confirmUpload({
+                        url: org.imageUrl,
+                    });
+                }
+                    router.refresh()
+                    router.push(`/org/${org.slug}/settings`)
+                    return `${org.name} עודכן בהצלחה...`
+            },
+            error : (data) => {
+                return data.message
+            }
+        })
+    }
+
     const handleSubmit = async () => {
+        if(!org.name || !org.slug) {
+            return toast.error("חובה לרשום שם עבור הארגון!")
+        }
 
         toast.promise(addNewOrganization(org),{
                 loading : "מוסיף ארגון חדש...",
@@ -136,20 +171,30 @@ const AddOrg = () => {
                     input={"text"}
                 />
             </div>
-            <div className='p-2 w-full'>
-                <FloatLabelText
-                    handleChange={handleChange}
-                    name="members"
-                    label="שותפים"
-                    value={org.members.join(",") || ""}
-                    input={"textarea"}
-                    className='text-sm'
-                />
-            </div>
-            <div className='w-full p-2'>
-            <Button className='w-full text-lg' onClick={handleSubmit}>הקמת הארגון</Button>
-            </div>
+            {!!organization ? null :
+                <>
+                    <div className='p-2 w-full'>
+                        <FloatLabelText
+                            handleChange={handleChange}
+                            name="members"
+                            label="שותפים"
+                            value={org.members.join(",") || ""}
+                            input={"textarea"}
+                            className='text-sm'
+                        />
+                    </div>
+
+                </>
+             }
+            {
+                !!organization ?
+                    <div className='w-full p-2'>
+                        <Button className='w-full text-lg' onClick={handleEditSubmit}>שמירת פרטי הארגון</Button>
+                    </div> : <div className='w-full p-2'>
+                <Button className='w-full text-lg' onClick={handleSubmit}>הקמת הארגון</Button>
+</div>
+            }
         </div>
     )
 }
-export default AddOrg
+export default AddEditOrg

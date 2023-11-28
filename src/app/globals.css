@@ -7,6 +7,10 @@ body,
 :root {
   height: 100%;
 }
+
+.z-high {
+  z-index: 9999;
+}
  
 @layer base {
   :root {
