@@ -7,7 +7,7 @@ import {MoreHorizontal} from "lucide-react";
 import {CloseIcon} from "@/components/Icons";
 import {Separator} from "@/components/ui/separator";
 import {toast} from "sonner";
-import {cloneList, deleteList} from "@/services/fetch";
+import {cloneList, cloneListAndCards, deleteList} from "@/services/fetch";
 import {list} from "postcss";
 import {useRouter} from "next/navigation";
 
@@ -36,7 +36,7 @@ const ListOptions = (props: ListOptionsType) => {
     }
 
     const onClone = () => {
-        toast.promise(cloneList(list), {
+        toast.promise(cloneListAndCards(list._id?.toString()!), {
             loading: "משכפל את הרשימה...",
             success: (data) => {
                 router.refresh()

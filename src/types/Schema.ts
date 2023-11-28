@@ -44,8 +44,8 @@ export type BoardModelType = {
 export type CardModelType = {
     _id?: ObjectIdType;
     title : string;
-    order : string;
-    description : string;
+    order ?: number;
+    description ?: string;
 
     createdAt?: Date;
     updatedAt?: Date;

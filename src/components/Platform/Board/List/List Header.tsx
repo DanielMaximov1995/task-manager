@@ -35,7 +35,6 @@ const ListHeader = (props : ListHeaderType) => {
         console.log(formData.get('title'))
         const titleFromData = formData.get("title") as string;
         if(titleFromData === title) {
-        console.log(titleFromData)
            return setEditMode(false)
         }
 

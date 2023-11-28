@@ -1,6 +1,13 @@
 'use server'
 import bcrypt from "bcryptjs"
-import {BoardModelType, ListModelType, ObjectIdType, OrganizationModelType, UserModelType} from "@/types/Schema"
+import {
+    BoardModelType,
+    CardModelType,
+    ListModelType,
+    ObjectIdType,
+    OrganizationModelType,
+    UserModelType
+} from "@/types/Schema"
 import UserModel from "@/utils/Database/models/UserModel"
 import {PasswordEmailType} from "@/types/others";
 import OrganizationModel from "../utils/Database/models/OrganizationModel";
@@ -8,6 +15,7 @@ import {getServerSession , Session } from "next-auth";
 import { authOptions } from '@/utils/authOptions'
 import BoardModel from "@/utils/Database/models/BoardModel";
 import ListModel from "@/utils/Database/models/ListModel";
+import CardModel from "@/utils/Database/models/CardModel";
 
 export const getUsers =  async () => {
     try {
@@ -244,7 +252,7 @@ export const deleteBoard = async (id : string) => {
 
 export const getAllList = async () => {
     try {
-        let data = await ListModel.find()
+        let data = await ListModel.find().populate('cards')
         return JSON.parse(JSON.stringify(data))
     } catch (error) {
         throw error;
@@ -253,7 +261,7 @@ export const getAllList = async () => {
 
 export const getListById = async (id : string) => {
     try {
-        let data = await ListModel.findById(id)
+        let data = await ListModel.findById(id).populate('cards')
         return JSON.parse(JSON.stringify(data))
     } catch (error) {
         throw error;
@@ -262,7 +270,7 @@ export const getListById = async (id : string) => {
 
 export const getListByBordId = async (boardId : string) => {
     try {
-        let data = await ListModel.find({boardId})
+        const data = await ListModel.find({ boardId }).populate('cards')
         return JSON.parse(JSON.stringify(data))
     } catch (error) {
         throw error;
@@ -308,6 +316,38 @@ export const cloneList = async (data : ListModelType) => {
     }
 }
 
+export const cloneListAndCards = async (listId : string) => {
+    try {
+        let listCounter = await ListModel.countDocuments()
+        const originalList = await ListModel.findById(listId)
+
+        if (!originalList) {
+            throw Error("רשימה לא קיימת כדי לשכפל...")
+        }
+
+        const { _id, order, createdAt , updatedAt , cards , title , ...clonedList } = originalList;
+
+        const clonedCards = await Promise.all(
+            originalList.cards.map(async (originalCard: CardModelType) => {
+                const { _id, createdAt, updatedAt, ...clonedCard } = originalCard;
+                const clonedCardDocument = await CardModel.create(clonedCard);
+                return clonedCardDocument._id;
+            })
+        );
+
+        return JSON.parse(JSON.stringify({message : `${originalList.title} שוכפל בהצלחה !`}))
+        const updatedList = await ListModel.create({
+                title : `${title} העתק`,
+                order : listCounter++,
+                $push: { cards: clonedCards },
+            },
+        );
+
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const updateList = async (id : string , data: ListModelType) => {
     try {
         const findByBoard = await ListModel.find({boardId : data.boardId})
@@ -317,7 +357,8 @@ export const updateList = async (id : string , data: ListModelType) => {
             throw Error("רשימה בשם הזה כבר קיים!")
         }
 
-        await ListModel.findByIdAndUpdate(id, data);
+        await ListModel.findByIdAndUpdate(id, data).exec();
+        const updatedList = await ListModel.findById(id).populate('cards')
         return JSON.parse(JSON.stringify({ message : 'הרשימה התעדכנה בהצלחה' }));
     } catch (err) {
         throw err;
@@ -326,9 +367,32 @@ export const updateList = async (id : string , data: ListModelType) => {
 
 export const deleteList = async (id : string) => {
     try {
-        await ListModel.findByIdAndDelete(id);
+        await ListModel.findByIdAndDelete(id).populate('cards')
         return JSON.parse(JSON.stringify({ message : 'הרשימה נמחקה בהצלחה' }));
     } catch (err) {
         throw err;
+    }
+}
+
+export const addNewCard = async (data : CardModelType , listId : string) => {
+    try {
+        const getListById = await ListModel.findById(listId)
+
+        if(!getListById) {
+            throw Error("לא קיימת רשימה כזאת!")
+        }
+
+        let newCard = await CardModel.create({...data, order : getListById.cards.length++})
+
+        const updatedList = await ListModel.findByIdAndUpdate(
+            listId,
+            {
+                $push: { cards: newCard._id },
+            },
+        );
+
+        return JSON.parse(JSON.stringify({ message : `${data.title} נוספה בהצלחה` }));
+    } catch (err) {
+        throw err
     }
 }
