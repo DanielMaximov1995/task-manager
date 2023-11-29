@@ -9,8 +9,6 @@ const IndexLayout = (props: PageAndLayoutType) => {
     const pathname = usePathname()
     const hiddenNav = pathname === "/sign-in" || pathname === "/sign-up" || pathname === "/org"
 
-    console.log(hiddenNav)
-
     return (
         <>
             {!hiddenNav && <NavbarPlatform/>}

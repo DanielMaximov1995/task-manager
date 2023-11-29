@@ -147,6 +147,16 @@ export const getOrganizationSlug =  async (slug : string) => {
     }
 }
 
+export const getOrganizationByBoardId =  async (boardId : string) => {
+    try {
+        let {orgId} = await BoardModel.findById(boardId)
+        let data = await OrganizationModel.findById(orgId)
+        return JSON.parse(JSON.stringify(data))
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const addNewOrganization =  async (data : OrganizationModelType) => {
     try {
         const session : Session | null= await getServerSession(authOptions)
@@ -220,6 +230,8 @@ export const getBoardsByOrgId = async (orgId : string) => {
 
 export const addNewBoard = async (data : BoardModelType) => {
     try {
+
+        console.log(data)
         await BoardModel.create(data);
 
         return JSON.parse(JSON.stringify({message : 'הלוח התווסף בהצלחה !'}))
@@ -319,30 +331,33 @@ export const cloneList = async (data : ListModelType) => {
 export const cloneListAndCards = async (listId : string) => {
     try {
         let listCounter = await ListModel.countDocuments()
-        const originalList = await ListModel.findById(listId)
+        const originalList = await ListModel.findById(listId).populate('cards')
 
         if (!originalList) {
             throw Error("רשימה לא קיימת כדי לשכפל...")
         }
 
-        const { _id, order, createdAt , updatedAt , cards , title , ...clonedList } = originalList;
+        const { _id, order, createdAt , updatedAt , cards , title , boardId , ...clonedList } = originalList;
+
+        const newList = new ListModel({
+            boardId,
+            title : `${title} העתק`,
+            order : listCounter++,
+        });
 
         const clonedCards = await Promise.all(
             originalList.cards.map(async (originalCard: CardModelType) => {
-                const { _id, createdAt, updatedAt, ...clonedCard } = originalCard;
-                const clonedCardDocument = await CardModel.create(clonedCard);
+                const { _id, createdAt, updatedAt , title , order , description } = originalCard;
+                const clonedCardDocument = await CardModel.create({ title , order , description , listId : newList._id });
                 return clonedCardDocument._id;
             })
         );
 
-        return JSON.parse(JSON.stringify({message : `${originalList.title} שוכפל בהצלחה !`}))
-        const updatedList = await ListModel.create({
-                title : `${title} העתק`,
-                order : listCounter++,
-                $push: { cards: clonedCards },
-            },
-        );
+        newList.cards = clonedCards
 
+        await newList.save()
+
+        return JSON.parse(JSON.stringify({message : `${originalList.title} שוכפל בהצלחה !`}))
     } catch (err) {
         throw err;
     }
@@ -357,19 +372,60 @@ export const updateList = async (id : string , data: ListModelType) => {
             throw Error("רשימה בשם הזה כבר קיים!")
         }
 
-        await ListModel.findByIdAndUpdate(id, data).exec();
-        const updatedList = await ListModel.findById(id).populate('cards')
+        await ListModel.findByIdAndUpdate(id, data)
         return JSON.parse(JSON.stringify({ message : 'הרשימה התעדכנה בהצלחה' }));
     } catch (err) {
         throw err;
     }
 }
 
-export const deleteList = async (id : string) => {
+export const deleteList = async (listId : string) => {
     try {
-        await ListModel.findByIdAndDelete(id).populate('cards')
+        const list = await ListModel.findById(listId).populate('cards')
+
+        if (!list) {
+            throw new Error('לא נמצאה רשימה כזאת!');
+        }
+
+        const cardIds = list.cards.map((card: CardModelType) => card._id?.toString());
+
+        await Promise.all(cardIds.map((cardId : string) => CardModel.deleteOne({ _id: cardId })));
+
+        await ListModel.findByIdAndDelete(listId)
         return JSON.parse(JSON.stringify({ message : 'הרשימה נמחקה בהצלחה' }));
     } catch (err) {
+        throw err;
+    }
+}
+
+export const updateListOrder = async (list : ListModelType[]) => {
+    try {
+        await Promise.all(list.map( async (listItem) => {
+            await ListModel.findByIdAndUpdate(listItem._id , listItem)
+            return listItem
+        }))
+
+        console.log(list)
+
+        return JSON.parse(JSON.stringify({ message : 'עודכן הסדר ברשימה' }));
+    } catch(err) {
+        throw err;
+    }
+}
+
+export const updateCardListOrder = async (cards : CardModelType[] , listId : string) => {
+    try {
+        await Promise.all(cards.map( async (cardItem) => {
+            await CardModel.findByIdAndUpdate(cardItem._id , cardItem)
+            return cardItem
+        }))
+
+        const cardIds = cards.map(card => card._id);
+        await ListModel.findByIdAndUpdate(listId, { cards: cardIds });
+
+        return JSON.parse(JSON.stringify({ message : 'עודכן הסדר ברשימה' }));
+    } catch(err) {
+        console.error("Error is : " , err)
         throw err;
     }
 }
@@ -382,9 +438,9 @@ export const addNewCard = async (data : CardModelType , listId : string) => {
             throw Error("לא קיימת רשימה כזאת!")
         }
 
-        let newCard = await CardModel.create({...data, order : getListById.cards.length++})
+        let newCard = await CardModel.create({...data, order : getListById.cards.length++ , listId})
 
-        const updatedList = await ListModel.findByIdAndUpdate(
+        await ListModel.findByIdAndUpdate(
             listId,
             {
                 $push: { cards: newCard._id },
@@ -394,5 +450,45 @@ export const addNewCard = async (data : CardModelType , listId : string) => {
         return JSON.parse(JSON.stringify({ message : `${data.title} נוספה בהצלחה` }));
     } catch (err) {
         throw err
+    }
+}
+
+export const updateCard = async (card : CardModelType) => {
+    try {
+        await CardModel.findByIdAndUpdate(card._id, card)
+        return JSON.parse(JSON.stringify({ message : `${card.title} התעדכן בהצלחה!` }));
+    } catch (err) {
+
+    }
+}
+
+export const deleteCard = async (listId : string , cardId : string) => {
+    try {
+        const getListById = await ListModel.findById(listId)
+        getListById.cards = getListById.cards.filter((card : string) => card !== cardId)
+
+        await ListModel.findByIdAndUpdate(listId,getListById)
+        await CardModel.findByIdAndDelete(cardId)
+
+        return JSON.parse(JSON.stringify({ message : 'הכריטיסייה נמחקה בהצלחה' }));
+    } catch (err) {
+        throw err
+    }
+}
+
+export const updateCardBetweenList = async (fromList : ListModelType , toList : ListModelType , card : CardModelType) => {
+    try {
+
+        await CardModel.findByIdAndUpdate(card._id , card)
+
+        let fromCards = fromList.cards?.map(fromCard => fromCard._id)
+        await ListModel.findByIdAndUpdate(fromList._id, {...fromList, cards : fromCards})
+
+        let toCards = toList.cards?.map(toCard => toCard._id)
+        await ListModel.findByIdAndUpdate(toList._id, {...toList, cards : toCards})
+
+        return JSON.parse(JSON.stringify({ message : 'הסדר שונה בהצלחה!' }));
+    } catch (err) {
+
     }
 }

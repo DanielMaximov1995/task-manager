@@ -14,7 +14,6 @@ import {BoardModelType} from "@/types/Schema";
 
 const AddNewBoard = (props : OrgSettingsType) => {
     const { organization } = props
-    console.log(organization)
     const [board, setBoard] = useState<BoardModelType>({
         title : "" ,
         imageFullUrl : "" ,

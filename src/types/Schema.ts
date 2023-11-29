@@ -43,6 +43,7 @@ export type BoardModelType = {
 
 export type CardModelType = {
     _id?: ObjectIdType;
+    listId ?: string;
     title : string;
     order ?: number;
     description ?: string;

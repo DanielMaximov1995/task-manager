@@ -31,7 +31,6 @@ const ListForm = (props : ListContainerType) => {
     };
 
 
-
     const onKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
             disableEditing()
@@ -60,8 +59,8 @@ const ListForm = (props : ListContainerType) => {
 
     if(editMode) {
         return <ListWrapper>
-            <form onSubmit={onSubmit} ref={formRef} className='w-full p-3 rounded-md bg-white space-y-4 shadow-md'>
-                <input value={title} onChange={(e) => setTitle(e.target.value)} id='title' className="text-sm px-2 py-1 h-7 font-medium outline-0 border-transparent hover:border-input focus:border-[1px] transition"
+            <form onSubmit={onSubmit} dir='rtl' ref={formRef} className='w-full flex flex-wrap p-3 rounded-md bg-white space-y-4 shadow-md'>
+                <input value={title} onChange={(e) => setTitle(e.target.value)} id='title' dir='rtl' className="text-sm px-2 py-1 h-7 font-medium outline-0 border-transparent hover:border-input focus:border-[1px] transition"
                        placeholder="כותרת הרשימה..."/>
                 <div className="flex items-center gap-x-1">
                     <Button size='sm'>
@@ -84,6 +83,7 @@ const ListForm = (props : ListContainerType) => {
             {/*<form className='w-full p-3 rounded-md bg-white space-y-4 shadow-md'>*/}
                 <Button
                     onClick={enableEditing}
+                    dir='rtl'
                     className="w-full rounded-md bg-white/80 hover:bg-white/50 transition p-3 text-primary flex justify-start items-center font-medium text-sm"
                 >
                     <PlusIcon fontSize={20}/>

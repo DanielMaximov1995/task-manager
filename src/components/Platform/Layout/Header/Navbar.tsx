@@ -8,7 +8,7 @@ import MobileSidebar from "@/components/Platform/Layout/Header/Mobile Sidebar";
 import PlusIcon from "@/components/Icons/Plus Icon";
 import AddNewBoard from "@/components/Platform/Organization/Borad/Add New Board";
 import {FormPopover} from "@/components/Form Popover";
-import {getOrganizationSlug} from "@/services/fetch";
+import {getOrganizationByBoardId, getOrganizationSlug} from "@/services/fetch";
 import {useEffect, useState} from "react";
 import {OrganizationModelType} from "@/types/Schema";
 import {redirect, useParams} from "next/navigation";
@@ -22,15 +22,22 @@ const NavbarPlatform = () => {
     const [organization, setOrganization] = useState<OrganizationTypeNav>("pending");
     const params = useParams()
     let orgId = decodeURIComponent(params?.orgId! as string)
+    let boardId = decodeURIComponent(params?.boardId! as string)
     const authIsLoading = status === 'loading'
 
     useEffect(() => {
         const getOrganization = async () => {
-            const data = await getOrganizationSlug(orgId)
+            let data
+            if(orgId && orgId !== "undefined") {
+                data = await getOrganizationSlug(orgId)
+            }
+            if(boardId && boardId !== "undefined") {
+                data = await getOrganizationByBoardId(boardId)
+            }
             setOrganization(data)
         }
 
-        orgId && getOrganization()
+        getOrganization()
     },[params])
 
     let accountPopover = authIsLoading ? <Skeleton className='w-10 h-10 rounded-full'/> : <AccountPopover/>

@@ -32,7 +32,6 @@ const ListHeader = (props : ListHeaderType) => {
     };
 
     const onSubmit = (formData : FormData) => {
-        console.log(formData.get('title'))
         const titleFromData = formData.get("title") as string;
         if(titleFromData === title) {
            return setEditMode(false)
@@ -77,7 +76,7 @@ const ListHeader = (props : ListHeaderType) => {
                 <form
                     ref={formRef}
                     action={onSubmit}
-                    className="flex-1 px-[2px]"
+                    className="flex-0 px-[2px]"
                 >
                     <input
                         ref={inputRef}
@@ -85,17 +84,17 @@ const ListHeader = (props : ListHeaderType) => {
                         name='title'
                         placeholder="Enter list title.."
                         defaultValue={title}
-                        className="text-sm px-[7px] py-1 h-7 font-medium border-transparent hover:border-input focus:border-input transition truncate bg-transparent focus:bg-white"
+                        className="text-sm px-[7px] py-1 h-7 font-medium border-transparent focus:bg-transparent focus:outline-0 hover:border-input focus:border-input transition truncate bg-transparent focus:bg-white"
                     />
                     <button type="submit" hidden />
                 </form>
             ) : (
-                <div
+                <p
                     onClick={enableEditing}
-                    className="w-full text-sm px-2.5 py-1 h-7 font-medium border-transparent"
+                    className="w-full text-sm text-right px-2.5 py-1 h-7 font-medium border-transparent"
                 >
                     {title}
-                </div>
+                </p>
             )}
             <ListOptions list={list} onAddCard={onAddCard}/>
         </div>
