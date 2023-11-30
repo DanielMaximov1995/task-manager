@@ -9,13 +9,13 @@ const strokes = {
     info: 'stroke-white'
 }
 
-const EditIcon = (props : IconsType) => {
-    const {fontSize , color} = props
+const CopyIcon = (props: IconsType) => {
+    const {fontSize, color} = props
 
     return (
         <svg
             className={`${color && strokes[color]}`}
-            style={{ fontSize : `${fontSize}px`}}
+            style={{fontSize: `${fontSize}px`}}
             stroke='none'
             fill="currentColor"
             strokeWidth="1.5"
@@ -25,9 +25,9 @@ const EditIcon = (props : IconsType) => {
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
         >
-            <path d="m18.988 2.012 3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287-3-3L8 13z"></path>
-            <path d="M19 19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"></path>
+                <path
+                    d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path>
         </svg>
     );
 }
-export default EditIcon
+export default CopyIcon

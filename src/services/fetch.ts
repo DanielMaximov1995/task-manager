@@ -492,3 +492,28 @@ export const updateCardBetweenList = async (fromList : ListModelType , toList : 
 
     }
 }
+
+export const cloneCard = async (card : CardModelType, list :ListModelType) => {
+    try {
+        const { _id , createdAt , updatedAt , order, title , ...cloneCard } = card
+        let cards = list?.cards!
+        let cardsIds = list?.cards?.map(cardId => cardId._id)
+
+        const newCard = await CardModel.create({
+            ...cloneCard,
+            title : `${title} העתק`,
+            order : cards.length++
+        })
+
+        cardsIds?.push(newCard?._id)
+
+        await ListModel.findByIdAndUpdate(cloneCard.listId , {
+            ...list,
+            cards : cardsIds
+        })
+
+        return JSON.parse(JSON.stringify({ message : `${title} שוכפל בהצלחה !` }));
+    } catch (err) {
+        throw err
+    }
+}

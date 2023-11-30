@@ -9,8 +9,6 @@ import {ListContainerType} from "@/components/Platform/Board/List/List Container
 import {CloseIcon} from "@/components/Icons";
 import {toast} from "sonner";
 import {addNewList} from "@/services/fetch";
-import FloatLabelText from "@/components/Float Label Text";
-import FloatLabelTextSmall from "@/components/Float Label Text Small";
 import {useRouter} from "next/navigation";
 
 
@@ -34,7 +32,7 @@ const ListForm = (props : ListContainerType) => {
     const onKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
             disableEditing()
-        };
+        }
     };
 
     useEventListener("keydown", onKeyDown);
@@ -80,7 +78,6 @@ const ListForm = (props : ListContainerType) => {
 
     return (
         <ListWrapper>
-            {/*<form className='w-full p-3 rounded-md bg-white space-y-4 shadow-md'>*/}
                 <Button
                     onClick={enableEditing}
                     dir='rtl'
@@ -89,7 +86,6 @@ const ListForm = (props : ListContainerType) => {
                     <PlusIcon fontSize={20}/>
                     רשימה חדשה
                 </Button>
-            {/*</form>*/}
         </ListWrapper>
     )
 }

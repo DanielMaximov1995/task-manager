@@ -32,3 +32,5 @@ const FloatLabelTextArea = forwardRef<HTMLTextAreaElement , FloatType>((props, r
 });
 export default FloatLabelTextArea
 
+FloatLabelTextArea.displayName = "FloatLabelTextArea"
+

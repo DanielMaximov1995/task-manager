@@ -68,14 +68,13 @@ const DescriptionCard = (props: CardModalProp) => {
     }
 
     return (
-        <>
-            <div className='pt-1'>
-                <AlignIcon align='right' fontSize={20}/>
-            </div>
-            <div className='flex flex-wrap items-start'>
+            <div className='flex w-full flex-wrap items-start'>
+                <div className='pt-1 flex items-center'>
+                    <AlignIcon align='right' fontSize={20}/>
                     <p className='m-0 px-2 mr-1 text-base font-semibold'>תיאור</p>
-                    <div className='w-full flex mt-1'>
-                        <div className={cn(`w-80 transition-all duration-300 relative`, editMode ? "h-24" : "h-16")}>
+                </div>
+                    <div className='w-full flex mt-1 mr-4'>
+                        <div className={cn(`w-full transition-all duration-300 relative`, editMode ? "h-24" : "h-16")}>
                             {
                                 editMode ?
                                     <form ref={formRef} className='mr-3' action={onSubmit}>
@@ -94,7 +93,6 @@ const DescriptionCard = (props: CardModalProp) => {
                         </div>
                     </div>
             </div>
-        </>
     )
 }
 export default DescriptionCard

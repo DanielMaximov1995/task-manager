@@ -62,3 +62,16 @@ export type ListModelType = {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export type LogModelType = {
+    _id?: ObjectIdType;
+    user : UserModelType;
+    board : BoardModelType;
+    organization : OrganizationModelType;
+    card : CardModelType;
+    list : ListModelType;
+    action : string; // העביר רשימה או מחק משהו ואתר מה מחר או אם עדכן כיתוב כלשהוא ומה כתב
+
+    createdAt?: Date;
+    updatedAt?: Date;
+}

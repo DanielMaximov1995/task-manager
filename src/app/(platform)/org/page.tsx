@@ -3,8 +3,6 @@ import Logo from "@/components/Logo";
 import RestrictedContent from "@/components/RestrictedContent";
 import {PageAndLayoutType} from "@/types/others";
 import SelectOrg from "@/components/Platform/Auth/Organization/Select-Org";
-import {getOrganizationByEmail} from "@/services/fetch";
-import {OrganizationModelType} from "@/types/Schema";
 import AddEditOrg from "@/components/Platform/Auth/Organization/Add-Edit-Org";
 import AccountPopover from "@/components/Platform/Layout/Header/Account Popover";
 
