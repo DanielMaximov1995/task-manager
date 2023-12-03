@@ -6,7 +6,7 @@ export type PageAndLayoutType = {
     params ?: { [key: string]: string };
     searchParams ?: { [key: string]: string };
     fullback ?: JSX.Element;
-    organizations ?: OrganizationModelType[]
+    organizations ?: OrganizationModelType[];
 }
 
 export type IconsType = {

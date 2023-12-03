@@ -1,5 +1,4 @@
 'use client'
-
 import Logo from "@/components/Logo";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
@@ -13,18 +12,14 @@ type ButtonOptions = {
 };
 
 const Navbar = () => {
-    const { status } = useSession()
+    const { status, data } = useSession()
     const isLogin = status === "authenticated"
+    let lastOrg = typeof window !== 'undefined' ? localStorage.getItem('orgId') : null;
 
     const optionsButton: Record<string, ButtonOptions> = {
-        "true": { label: "למנהלת המשימות", href: "/platform" },
+        "true": { label: "למנהלת המשימות", href: `/org/${lastOrg}` },
         "false": { label: "התחברות", href: "/sign-in" }
     };
-
-
-    if(isLogin) {
-        return redirect('/org')
-    }
 
     const ButtonOfNav = <Link href={optionsButton[isLogin.toString()]?.href} className='font-semibold'>
         {optionsButton[isLogin.toString()]?.label}
@@ -38,7 +33,7 @@ const Navbar = () => {
                 <div className='space-x-4 md:block md:w-auto flex items-center justify-between w-full'>
                     <Button size='sm' variant='outline' asChild>
                         <RestrictedContentAuth fullback={ButtonOfNav}>
-                            <Link href={isLogin ? '/org' : '/sign-in'} className='font-semibold'>
+                            <Link href={isLogin ? `/org/${lastOrg}` : '/sign-in'} className='font-semibold'>
                                 { isLogin ? "למנהל המשימות" : "התחברות" }
                             </Link>
                         </RestrictedContentAuth>

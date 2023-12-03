@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import Link from "next/link";
 import {PageAndLayoutType} from "@/types/others";
 import {useOrganization} from "@/hooks/use-Organization";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 const SelectOrg = () => {
     const { organizations } = useOrganization()
@@ -18,9 +19,10 @@ const SelectOrg = () => {
                         <div key={org?._id?.toString()} className='py-1'>
                             <Link href={`/org/${org.slug}`} className='flex group items-center cursor-pointer bg-slate-100 rounded-md effect hover:bg-slate-200 p-2 justify-between'>
                                 <div className='flex gap-x-4 items-center'>
-                                    <div className='w-7 h-7 relative'>
-                                        <Image fill src={org.imageUrl} alt='organization' className='rounded-sm object-contain'/>
-                                    </div>
+                                    <Avatar>
+                                        <AvatarImage src={org?.imageUrl} />
+                                        <AvatarFallback>{org?.name.slice(0 , 1)}</AvatarFallback>
+                                    </Avatar>
                                     <p className='text-neutral-800 text-md group-hover:font-semibold effect'>{org.name}</p>
                                 </div>
                                 <span className='text-neutral-400 group-hover:text-neutral-800 effect'><ChevronIcon position={"left"} fontSize={30}/></span>

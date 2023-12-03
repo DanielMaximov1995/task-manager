@@ -4,15 +4,20 @@ import Sidebar from "@/components/Platform/Layout/Sidebar/Sidebar";
 import MainBoard from "@/components/Platform/Organization/Borad/Main Board";
 import {Suspense} from "react";
 import Loading from "@/components/loading";
+import {redirect} from "next/navigation";
 
 export const generateMetadata  = async (props : PageAndLayoutType) => {
     const { params } = props
     const organization = await getOrganizationSlug(decodeURIComponent(params?.orgId!))
 
+    if(!organization) {
+        return redirect("/org")
+    }
+
     return {
         title: {
-            template : `%s • ${organization.name}`,
-            default : organization.name
+            template : `%s • ${organization ? organization.name : "לא נמצא"}`,
+            default : organization ? organization.name : "לא נמצא"
         }
     };
 }
@@ -21,6 +26,10 @@ const LayoutOrg = async (props : PageAndLayoutType) => {
     const { children , params } = props
     let orgId = decodeURIComponent(params?.orgId!)
     const getOrg = await getOrganizationSlug(orgId)
+
+    if(!getOrg) {
+        return redirect("/org")
+    }
 
     return (
             <main className='px-4 max-w-7xl 2xl:max-w-screen-2xl mx-auto'>

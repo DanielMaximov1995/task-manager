@@ -55,6 +55,12 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
                 !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
+
+            if (isLoginIn && pathname === "/") {
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
+                return null;
+            }
+
             return null;
         };
 

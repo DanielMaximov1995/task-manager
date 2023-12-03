@@ -10,6 +10,8 @@ const OrgPage = async (props : PageAndLayoutType) => {
     const { searchParams, params } = props
     let addNew  = (!!searchParams?.addNew).toString() as 'true' | 'false'
 
+    console.log(addNew)
+
     const options = {
         true : { label : "יצירת ארגון חדש" , component : AddEditOrg },
         false : { label : "בחר ארגון כדי להמשיך" , component : SelectOrg },
