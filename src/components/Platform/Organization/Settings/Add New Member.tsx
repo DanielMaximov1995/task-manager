@@ -15,12 +15,12 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {Button} from '@/components/ui/button'
-import FloatLabelText from "@/components/Float Label Text";
 import {toast} from "sonner";
 import {addNewLog, updateOrganization} from "@/services/fetch";
 import {useOrganization} from "@/hooks/use-Organization";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
 
 type AddNewMemberType = {
     organization: OrganizationModelType
@@ -97,13 +97,12 @@ const AddNewMember = (props: AddNewMemberType) => {
                     <AlertDialogDescription className='flex flex-wrap'>
                         <div className='p-2 w-full'>
                             <FloatLabelText
-                                handleChange={handleChange}
+                                onChange={handleChange}
                                 name="email"
                                 label='דוא"ל'
                                 value={newMember.email || ""}
-                                input={"text"}
                                 type='email'
-                                email={true}
+                                inputMode="email"
                             />
                         </div>
                         <div className='p-2 w-full text-right'>

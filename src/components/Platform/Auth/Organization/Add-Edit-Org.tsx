@@ -2,7 +2,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {OrganizationModelType} from "@/types/Schema";
 import {useState, useEffect, ChangeEvent} from 'react'
-import FloatLabelText from "@/components/Float Label Text";
 import {CustomEvent, CustomEventTarget, PageAndLayoutType} from "@/types/others";
 import {createSlug} from "@/services/slugIt";
 import { Button } from '@/components/ui/button'
@@ -13,6 +12,8 @@ import {Progress} from "@/components/ui/progress";
 import {formatFileSize} from "@/components/Upload Files/Single Image Dropzone";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
+import FloatLabelTextArea from "@/components/Float Text/Float Label Text Area";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
 
 export type OrgPropsType = {organization ?: OrganizationModelType}
 
@@ -104,7 +105,7 @@ const AddEditOrg = (props : OrgPropsType) => {
                     });
                 }
                     router.refresh()
-                    await addNewLog(`בוצע עדכון של המידע בארגון` , "update" , organization?._id?.toString()! , session?.user?._id?.toString()! , "organization")
+                    await addNewLog(`בוצע עדכון של המידע בארגון` , "update" , organization?._id?.toString()! , session?.user?._id?.toString()! , "organization" , organization?._id?.toString()!)
                 router.push(`/org/${org.slug}/settings`)
                     return `${org.name} עודכן בהצלחה...`
             },
@@ -158,31 +159,28 @@ const AddEditOrg = (props : OrgPropsType) => {
                 </div>
             <div className='p-2 w-full'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="name"
                     label="שם"
                     value={org.name || ""}
-                    input={"text"}
                 />
             </div>
             <div className='p-2 w-full'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="slug"
                     label="מטא קישור"
                     value={org.slug || ""}
-                    input={"text"}
                 />
             </div>
             {!!organization ? null :
                 <>
                     <div className='p-2 w-full'>
-                        <FloatLabelText
-                            handleChange={handleChange}
+                        <FloatLabelTextArea
+                            onChange={handleChange}
                             name="members"
                             label="שותפים"
                             value={org.members.join(",") || ""}
-                            input={"textarea"}
                             className='text-sm'
                         />
                     </div>

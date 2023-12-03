@@ -1,13 +1,13 @@
 'use client'
 
 import {useState , FormEvent} from "react";
-import FloatLabelText from "@/components/Float Label Text";
 import {CustomEvent} from "@/types/others";
 import {Button} from "@/components/ui/button";
 import Link from 'next/link';
 import { toast } from "sonner";
 import { addNewUser } from "@/services/fetch";
 import { signIn } from "next-auth/react";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
 
 type UserSignUp = {
     email: string;
@@ -50,38 +50,35 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className='flex flex-wrap'>
             <div className='w-full p-2'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="fName"
                     label='שם פרטי'
                     value={user.fName || ""}
-                    input={"text"}
                 />
             </div>
             <div className='w-full p-2'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="lName"
                     label='שם משפחה'
                     value={user.lName || ""}
-                    input={"text"}
                 />
             </div>
             <div className='w-full p-2'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="email"
                     label='דוא"ל'
+                    inputMode='email'
                     value={user.email || ""}
-                    input={"text"}
                 />
             </div>
             <div className='w-full p-2'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="password"
                     label='סיסמה'
                     value={user.password || ""}
-                    input={"password"}
                 />
             </div>
             <div className="w-full p-2">

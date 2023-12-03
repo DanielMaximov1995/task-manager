@@ -4,9 +4,9 @@ import {UserModelType} from "@/types/Schema";
 import {useState} from "react";
 import {signOut, useSession} from "next-auth/react";
 import {CustomEvent, CustomEventTarget, PasswordEmailType} from "@/types/others";
-import FloatLabelText from "@/components/Float Label Text";
 import {toast} from "sonner";
 import { updateEmailOrPassword} from "@/services/fetch";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
 
 const Security = ({user}: { user: UserModelType | null | undefined }) => {
     const [form, setForm] = useState<PasswordEmailType>({
@@ -50,22 +50,20 @@ const Security = ({user}: { user: UserModelType | null | undefined }) => {
         <div className="flex flex-wrap">
             <div className="w-full p-2">
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="oldPassword"
                     label='סיסמה לאימות'
                     value={form?.oldPassword || ""}
-                    input={"password"}
                 />
             </div>
             <div className='w-full p-2'>
                 <div className='p-2 border border-dashed'>
                     <p className='text-center text-xl font-semibold text-neutral-800'>שינוי דואר אלקטרוני</p>
                     <FloatLabelText
-                        handleChange={handleChange}
+                        onChange={handleChange}
                         name="email"
                         label='דוא"ל'
                         value={form?.email || ""}
-                        input={"text"}
                         type="email"
                     />
                 </div>
@@ -75,20 +73,18 @@ const Security = ({user}: { user: UserModelType | null | undefined }) => {
                     <p className='text-center text-xl font-semibold text-neutral-800'>שינוי הסיסמה</p>
                     <div className='py-2'>
                         <FloatLabelText
-                            handleChange={handleChange}
+                            onChange={handleChange}
                             name="newPassword"
                             label='סיסמה חדשה'
                             value={form?.newPassword || ""}
-                            input={"password"}
                         />
                     </div>
                     <div className='py-2'>
                     <FloatLabelText
-                        handleChange={handleChange}
+                        onChange={handleChange}
                         name="confirmNewPassword"
                         label='אימות סיסמה חדשה'
                         value={form?.confirmNewPassword || ""}
-                        input={"password"}
                     />
                     </div>
                 </div>

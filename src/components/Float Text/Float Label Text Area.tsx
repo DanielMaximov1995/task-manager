@@ -20,7 +20,7 @@ const FloatLabelTextArea = forwardRef<HTMLTextAreaElement , FloatType>((props, r
             <textarea
                 name={name}
                 {...other}
-                className={cn('input peer h-14 outline-0 py-1 resize-none w-full focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 focus:ring-0 shadow-sm' , className)}
+                className={cn('input peer h-14 py-1 resize-none w-full focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 focus:ring-0 shadow-sm' , className)}
             />
             <label
                 htmlFor={name}

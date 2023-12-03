@@ -234,7 +234,6 @@ export const getBoardsByOrgId = async (orgId : string) => {
 export const addNewBoard = async (data : BoardModelType) => {
     try {
 
-        console.log(data)
         await BoardModel.create(data);
 
         return JSON.parse(JSON.stringify({message : 'הלוח התווסף בהצלחה !'}))
@@ -407,8 +406,6 @@ export const updateListOrder = async (list : ListModelType[]) => {
             await ListModel.findByIdAndUpdate(listItem._id , listItem)
             return listItem
         }))
-
-        console.log(list)
 
         return JSON.parse(JSON.stringify({ message : 'עודכן הסדר ברשימה' }));
     } catch(err) {

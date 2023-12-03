@@ -1,13 +1,14 @@
 'use client'
 
 import {useState , FormEvent} from "react";
-import FloatLabelText from "@/components/Float Label Text";
 import {CustomEvent} from "@/types/others";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from 'sonner';
 import { signIn } from "next-auth/react";
 import {useRouter} from "next/navigation";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
+import FloatLabelPassword from "@/components/Float Text/Float Label Password";
 
 type UserLogin = {
     email: string;
@@ -48,20 +49,20 @@ const SignIn = () => {
         <form onSubmit={handleSubmit} className='flex flex-wrap'>
             <div className='w-full p-2'>
                 <FloatLabelText
-                    handleChange={handleChange}
+                    onChange={handleChange}
                     name="email"
                     label='דוא"ל'
+                    type='email'
+                    inputMode='email'
                     value={user.email || ""}
-                    input={"text"}
                 />
             </div>
             <div className='w-full p-2'>
-                <FloatLabelText
-                    handleChange={handleChange}
+                <FloatLabelPassword
+                    onChange={handleChange}
                     name="password"
                     label='סיסמה'
                     value={user.password || ""}
-                    input={"password"}
                 />
             </div>
             <div className="w-full p-2">

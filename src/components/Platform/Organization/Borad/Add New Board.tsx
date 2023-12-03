@@ -2,7 +2,6 @@
 
 import {useState} from "react";
 import {CustomEvent, CustomEventTarget} from '@/types/others'
-import FloatLabelTextSmall from "@/components/Float Label Text Small";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {addNewBoard, addNewLog} from "@/services/fetch";
@@ -11,6 +10,7 @@ import {useRouter} from "next/navigation";
 import ImagePicker from "@/components/Image Picker";
 import {BoardModelType} from "@/types/Schema";
 import {useSession} from "next-auth/react";
+import FloatLabelText from "@/components/Float Text/Float Label Text";
 
 
 const AddNewBoard = (props : OrgSettingsType) => {
@@ -52,7 +52,7 @@ const AddNewBoard = (props : OrgSettingsType) => {
                 <ImagePicker name="image" handleChange={handleChange}/>
                 </div>
                 <div className='w-full p-2'>
-                <FloatLabelTextSmall className='w-full' handleChange={handleChange} label={"שם הלוח"} name={"title"} value={board.title || ""} input={"text"}/>
+                <FloatLabelText className='w-full border-[1px]' onChange={handleChange} label={"שם הלוח"} name={"title"} value={board.title || ""}/>
                 </div>
                 <div className='w-full p-2'>
                 <Button onClick={handleSubmit} className='w-full'>צור חדש</Button>
