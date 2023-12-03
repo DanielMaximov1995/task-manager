@@ -7,20 +7,25 @@ import {CloseIcon} from "@/components/Icons";
 import {useEventListener, useOnClickOutside} from "usehooks-ts";
 import FloatLabelTextArea from "@/components/Float Text/Float Label Text Area";
 import {toast} from "sonner";
-import {addNewCard} from "@/services/fetch";
+import {addNewCard, addNewLog} from "@/services/fetch";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
+import {ListModelType} from "@/types/Schema";
 
 type CardFormType =  {
     listId : any;
     editMode : boolean;
     enableEditing : () => void;
     disableEditing : () => void;
+    card : ListModelType;
+    orgId : string
 }
 
 const CardForm = forwardRef<HTMLTextAreaElement , CardFormType>((props, ref) => {
-    const { listId, editMode, enableEditing, disableEditing } = props;
+    const { listId, editMode, enableEditing, disableEditing , card, orgId } = props;
     const formRef = useRef<ElementRef<"form">>(null);
     const router = useRouter()
+    const {data : session} = useSession()
 
     const onKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
@@ -36,8 +41,9 @@ const CardForm = forwardRef<HTMLTextAreaElement , CardFormType>((props, ref) => 
 
         toast.promise(addNewCard({title } , listId),{
             loading : "מצרף כרטיסייה חדשה...",
-            success : (data) => {
+            success : async (data) => {
                 disableEditing()
+                await addNewLog(`כרטיסייה בשם ${title} נוספה לרשימה ${card.title}` , "add" , listId , session?.user?._id?.toString()! , "list" , orgId)
                 router.refresh()
                 return data.message
             },

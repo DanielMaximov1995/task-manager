@@ -3,13 +3,15 @@ import { useRouter } from 'next/navigation'
 import React, {ElementRef, useRef, useState} from 'react'
 import {CardModalProp} from "@/components/Platform/Board/List/Card/Card Modal/Index Card Modal";
 import {LayoutIcon} from "@/components/Icons";
-import {updateCard} from "@/services/fetch";
+import {addNewLog, updateCard} from "@/services/fetch";
 import {toast} from "sonner";
+import {useSession} from "next-auth/react";
 
 const HeaderCardModal = (props : CardModalProp) => {
-    const { card , list , handleChange } = props
+    const { card , list , handleChange, orgId } = props
     const inputRef = useRef<ElementRef<"input">>(null);
     const router = useRouter()
+    const { data } = useSession()
 
     const onBlur = () => {
         inputRef.current?.form?.requestSubmit();
@@ -24,10 +26,10 @@ const HeaderCardModal = (props : CardModalProp) => {
 
         toast.promise(updateCard({...card , title}),{
             loading : "מעדכן את שם הכרטיסיה...",
-            success : () => {
+            success : async () => {
                 router.refresh()
-                // setTitleData(title)
                 handleChange&& handleChange("title" , title)
+                await addNewLog(`הכרטיסייה ${card.title} עודכה לשם ${title}` , "update" , list?._id?.toString()! , data?.user?._id?.toString()!, "list" , orgId )
                 return `הכרטיסייה עודכנה עם השם ${title}`
             },
             error : (data) => {

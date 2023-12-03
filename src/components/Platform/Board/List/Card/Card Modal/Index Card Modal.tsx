@@ -10,24 +10,25 @@ export type CardModalProp = {
     card : CardModelType;
     list ?: ListModelType;
     onClose ?: () => void
-    handleChange ?: (name: string, value: string) => void
+    handleChange ?: (name: string, value: string) => void;
+    orgId : string;
 }
 
 const CardModal = (props : CardModalProp) => {
-    const { isOpen , card, list , onClose, handleChange } = props
+    const { isOpen , card, list , onClose, handleChange, orgId } = props
 
     return (
         <div className='flex-row-reverse'>
             <Dialog open={isOpen} onOpenChange={onClose}>
                 <DialogContent className='w-[380px] rounded-md'>
                     <div className='flex flex-wrap'>
-                            <HeaderCardModal list={list} card={card} handleChange={handleChange}/>
+                            <HeaderCardModal orgId={orgId} list={list} card={card} handleChange={handleChange}/>
                     </div>
                     <div className='flex flex-wrap'>
-                            <DescriptionCard card={card} handleChange={handleChange}/>
+                            <DescriptionCard orgId={orgId} card={card} handleChange={handleChange}/>
                     </div>
                     <div className='flex flex-wrap'>
-                            <CardActions card={card} onClose={onClose} list={list}/>
+                            <CardActions card={card} onClose={onClose} list={list} orgId={orgId}/>
                     </div>
                 </DialogContent>
             </Dialog>

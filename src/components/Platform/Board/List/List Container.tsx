@@ -1,16 +1,18 @@
 "use client";
 
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import {ListModelType} from "@/types/Schema";
+import {BoardModelType, ListModelType} from "@/types/Schema";
 import ListItem from "@/components/Platform/Board/List/List Item";
 import ListForm from "@/components/Platform/Board/List/List Form";
-import {updateCardBetweenList, updateCardListOrder, updateListOrder} from "../../../../services/fetch";
+import {addNewLog, updateCardBetweenList, updateCardListOrder, updateListOrder} from "@/services/fetch";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 export type ListContainerType = {
     lists: ListModelType[];
     boardId: string;
+    board ?: BoardModelType
 };
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
@@ -22,8 +24,10 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 };
 
 const ListContainer = (props : ListContainerType) => {
-    const { boardId, lists } = props
+    const { boardId, lists , board } = props
     const [orderedData, setOrderedData] = useState(lists);
+    const { data } = useSession()
+    const router= useRouter()
 
     useEffect(() => {
         setOrderedData(lists);
@@ -51,7 +55,9 @@ const ListContainer = (props : ListContainerType) => {
             ).map((item, index) => ({ ...item, order: index }));
 
             setOrderedData(items);
+
             await updateListOrder(items)
+            await addNewLog(`השתנה הסדר בלוח ${board?.title}` , "update" , lists[source.index]?._id?.toString()! , data?.user?._id?.toString()! , "list" , board?.orgId!)
         }
 
         if (type === "card") {
@@ -86,6 +92,8 @@ const ListContainer = (props : ListContainerType) => {
                 sourceList.cards = reorderedCards;
                 setOrderedData(newOrderedData);
                 await updateCardListOrder(reorderedCards , source.droppableId)
+                const list = lists.find(card => card._id === source.droppableId)
+                await addNewLog(`עודכן סדר הכרטיסיות ברשימה ${list?.title}` , "update" , source.droppableId , data?.user?._id?.toString()! , "list" , board?.orgId!)
             } else {
                 const [movedCard] = sourceList.cards.splice(source.index, 1);
                 movedCard.listId = destination.droppableId;
@@ -102,8 +110,11 @@ const ListContainer = (props : ListContainerType) => {
                 let newList:ListModelType = newOrderedData.find(li => li._id === destination.droppableId)!
                 let oldList :ListModelType = newOrderedData.find(li => li._id === source.droppableId)!
                 await updateCardBetweenList(oldList , newList , movedCard)
+                await addNewLog(`הכרטיסייה ${movedCard.title} הועברה מרשימה ${oldList.title} לרשימה ${newList.title}` , "update" , destination.droppableId , data?.user?._id?.toString()! , "list" , board?.orgId!)
             }
         }
+
+        router.refresh()
     }
 
     return (
@@ -116,7 +127,7 @@ const ListContainer = (props : ListContainerType) => {
                             ref={provided.innerRef}
                             className="flex justify-end gap-x-3 h-full"
                         >
-                            <ListForm boardId={boardId} lists={lists}/>
+                            <ListForm boardId={boardId} lists={lists} board={board}/>
                             <div className="flex-shrink-0 w-1" dir='rtl' />
                             {orderedData?.map((list, index) => {
                                 return (
@@ -124,6 +135,7 @@ const ListContainer = (props : ListContainerType) => {
                                         key={list?._id?.toString()!}
                                         index={index}
                                         list={list}
+                                        orgId={board?.orgId!}
                                         cards={list.cards!}
                                     />
                                 )

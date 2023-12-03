@@ -8,16 +8,18 @@ import {useEventListener, useOnClickOutside} from "usehooks-ts";
 import {ListContainerType} from "@/components/Platform/Board/List/List Container";
 import {CloseIcon} from "@/components/Icons";
 import {toast} from "sonner";
-import {addNewList} from "@/services/fetch";
+import {addNewList, addNewLog} from "@/services/fetch";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 
 const ListForm = (props : ListContainerType) => {
-    const { boardId } = props
+    const { boardId, board } = props
     const formRef = useRef<ElementRef<"form">>(null);
     const [editMode, setEditMode] = useState(false);
     const [title, setTitle] = useState("");
     const router = useRouter()
+    const { data : session } = useSession()
 
     const enableEditing = () => {
         setEditMode(true);
@@ -40,12 +42,13 @@ const ListForm = (props : ListContainerType) => {
 
     const onSubmit = (e : FormEvent) => {
         e.preventDefault()
-        let data = { title , boardId }
+        let list = { title , boardId }
 
-        toast.promise(addNewList(data) ,{
+        toast.promise(addNewList(list) ,{
             loading : "מוסיף רשימה חדשה...",
-            success : () => {
+            success : async (data) => {
                 disableEditing();
+                await addNewLog(`הרשימה ${title} נוספה ללוח ${board?.title}` , "update" , data?.newList?._id?.toString()! , session?.user?._id?.toString()! , "list" , board?.orgId!)
                 router.refresh();
                 return `הרשימה ${title} נוספה בהצלחה!`
             },

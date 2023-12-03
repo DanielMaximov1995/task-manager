@@ -11,11 +11,12 @@ import { Draggable, Droppable } from "@hello-pangea/dnd";
 type ListItemType = {
     index: number;
     list: ListModelType;
-    cards : CardModelType[]
+    cards : CardModelType[];
+    orgId : string
 }
 
 const ListItem = (props: ListItemType) => {
-    const {index, list , cards} = props
+    const {index, list , cards, orgId} = props
     const textArea = useRef<ElementRef<"textarea">>(null)
     const [editMode, setEditMode] = useState(false);
 
@@ -42,6 +43,7 @@ const ListItem = (props: ListItemType) => {
                         <ListHeader
                             onAddCard={enableEditing}
                             list={list}
+                            orgId={orgId}
                         />
                         <Droppable droppableId={list?._id?.toString()!} type="card">
                             {(provided) => (
@@ -59,6 +61,7 @@ const ListItem = (props: ListItemType) => {
                                             key={card?._id?.toString()!}
                                             card={card}
                                             list={list}
+                                            orgId={orgId}
                                         />
                                     ))}
                                     {provided.placeholder}
@@ -67,7 +70,9 @@ const ListItem = (props: ListItemType) => {
                         </Droppable>
                         <CardForm
                             listId={list?._id?.toString()!}
+                            card={list}
                             ref={textArea}
+                            orgId={orgId}
                             editMode={editMode}
                             enableEditing={enableEditing}
                             disableEditing={() => setEditMode(false)}

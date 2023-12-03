@@ -66,11 +66,13 @@ export type ListModelType = {
 export type LogModelType = {
     _id?: ObjectIdType;
     user : UserModelType;
-    board : BoardModelType;
-    organization : OrganizationModelType;
-    card : CardModelType;
-    list : ListModelType;
-    action : string; // העביר רשימה או מחק משהו ואתר מה מחר או אם עדכן כיתוב כלשהוא ומה כתב
+    board ?: BoardModelType;
+    organization ?: OrganizationModelType;
+    list ?: ListModelType;
+    action : string;
+    type : "delete" | "add" | "update"
+    model : "board" | "organization" | "list"
+    orgId : string;
 
     createdAt?: Date;
     updatedAt?: Date;

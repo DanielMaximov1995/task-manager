@@ -13,5 +13,5 @@ const UserModel = new mongoose.Schema<UserModelType>({
     phone : { type : String},
 },{timestamps : true});
 
-export default mongoose.models?.users ||
-mongoose.model("users", UserModel);
+export default mongoose.models?.user ||
+mongoose.model("user", UserModel);

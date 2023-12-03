@@ -7,25 +7,29 @@ import {MoreHorizontal} from "lucide-react";
 import {CloseIcon} from "@/components/Icons";
 import {Separator} from "@/components/ui/separator";
 import {toast} from "sonner";
-import {cloneList, cloneListAndCards, deleteList} from "@/services/fetch";
+import {addNewLog, cloneList, cloneListAndCards, deleteList} from "@/services/fetch";
 import {list} from "postcss";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 type ListOptionsType = {
     list: ListModelType;
-    onAddCard?: () => void
+    onAddCard?: () => void;
+    orgId : string
 }
 
 const ListOptions = (props: ListOptionsType) => {
-    const {list, onAddCard} = props
+    const {list, onAddCard , orgId} = props
     const router = useRouter()
     const closeRef = useRef<ElementRef<"button">>(null);
+    const { data : session } = useSession()
 
     const onDelete = () => {
         toast.promise(deleteList(list?._id?.toString()!), {
             loading: "מוחק את הרשימה...",
-            success: (data) => {
+            success: async (data) => {
                 router.refresh()
+                await addNewLog(`הרשימה ${list?.title} נמחקה` , "delete" , list?._id?.toString()! , session?.user?._id?.toString()! , "list", orgId )
                 closeRef?.current?.click()
                 return data.message
             },
@@ -38,8 +42,9 @@ const ListOptions = (props: ListOptionsType) => {
     const onClone = () => {
         toast.promise(cloneListAndCards(list._id?.toString()!), {
             loading: "משכפל את הרשימה...",
-            success: (data) => {
+            success: async (data) => {
                 router.refresh()
+                await addNewLog(`הרשימה ${list?.title} שוכפלה` , "add" , list?._id?.toString()! , session?.user?._id?.toString()! , "list" , orgId )
                 closeRef?.current?.click()
                 return data.message
             },

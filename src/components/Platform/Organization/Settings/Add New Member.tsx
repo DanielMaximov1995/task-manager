@@ -17,9 +17,10 @@ import {
 import {Button} from '@/components/ui/button'
 import FloatLabelText from "@/components/Float Label Text";
 import {toast} from "sonner";
-import {updateOrganization} from "@/services/fetch";
+import {addNewLog, updateOrganization} from "@/services/fetch";
 import {useOrganization} from "@/hooks/use-Organization";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 type AddNewMemberType = {
     organization: OrganizationModelType
@@ -34,6 +35,7 @@ const AddNewMember = (props: AddNewMemberType) => {
     const [newMember, setNewMember] = useState(initialState);
     const { onUpdateOrganization } = useOrganization()
     const router = useRouter()
+    const {data} = useSession()
 
     const handleChecked = (e : boolean) => {
         setNewMember(prev => ({
@@ -71,9 +73,10 @@ const AddNewMember = (props: AddNewMemberType) => {
         toast.promise(updateOrganization(organization.slug , updatedOrg),
             {
                 loading : "מוסיף שותף חדש...",
-                success : () => {
+                success : async () => {
                     onUpdateOrganization(organization.slug , updatedOrg)
                     setNewMember(initialState)
+                    await addNewLog(`${newMember?.email} צורף לארגון` , "update" , organization?._id?.toString()! , data?.user?._id?.toString()! , "organization" , organization?._id?.toString()!)
                     router.refresh()
                     return "השותף נוסף בהצלחה!"
                 },

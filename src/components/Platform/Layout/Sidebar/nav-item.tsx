@@ -7,6 +7,7 @@ import {ActivityIcon, LayoutIcon, SettingIcon} from "@/components/Icons";
 import {usePathname, useRouter} from "next/navigation";
 import { Button } from '@/components/ui/button'
 import {Skeleton} from "@/components/ui/skeleton";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 interface NavItemProps {
     isExpanded: boolean;
@@ -38,14 +39,10 @@ const NavItem = (props: NavItemProps) => {
                     )}
                 >
                     <div className='flex items-center gap-x-2'>
-                        <div className='w-7 h-7 relative'>
-                            <Image
-                                fill
-                                src={organization.imageUrl}
-                                alt="Organization"
-                                className="rounded-sm object-cover"
-                            />
-                        </div>
+                            <Avatar>
+                                <AvatarImage src={organization?.imageUrl} />
+                                <AvatarFallback>{organization?.name.slice(0 , 1)}</AvatarFallback>
+                            </Avatar>
                         <span className={`${isActive && isExpanded ? "font-semibold tracking-widest" : "font-medium tracking-normal"} effect text-md`}>{organization.name}</span>
                     </div>
                 </AccordionTrigger>

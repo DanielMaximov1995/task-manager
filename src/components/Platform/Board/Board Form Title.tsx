@@ -2,12 +2,11 @@
 
 import {BoardNavBarType} from "@/components/Platform/Board/Board Navbar";
 import {ElementRef, FormEvent, useRef, useState} from "react";
-import FloatLabelText from "@/components/Float Label Text";
 import {Button} from "@/components/ui/button";
-import {CustomEvent} from "@/types/others";
 import {toast} from "sonner";
-import {updateBoard} from "@/services/fetch";
+import {addNewLog, updateBoard} from "@/services/fetch";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 const BoardFormTitle = (props : BoardNavBarType) => {
     const { board, isAdmin } = props
@@ -16,6 +15,7 @@ const BoardFormTitle = (props : BoardNavBarType) => {
     const [title, setTitle] = useState(board.title);
     const [editMode, setEditMode] = useState(false);
     const router = useRouter()
+    const { data : session } = useSession()
 
     if(!isAdmin) {
         return <span className='text-lg font-bold text-white h-auto w-auto p-1 px-2 font-semibold tracking-widest'>{title}</span>
@@ -36,10 +36,11 @@ const BoardFormTitle = (props : BoardNavBarType) => {
         }
         toast.promise(updateBoard(board?._id?.toString()! , updatedBoard) , {
             loading : "מעדכן את שם הלוח...",
-            success : () => {
-                router.refresh()
+            success : async () => {
                 setTitle(formData.get("title") as string)
                 setEditMode(false)
+                router.refresh()
+                await addNewLog(`הרשימה ${title} נוספה ללוח ${board.title}` , "update" , board?._id?.toString()! , session?.user?._id?.toString()! , "board" , board?.orgId)
                 return "שם הלוח התעדכן..."
             },
             error : (data) => {

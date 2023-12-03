@@ -18,7 +18,7 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
     const router = useRouter();
     const { onCreate , organizations , loading} = useOrganization();
     let slug = decodeURIComponent(params?.orgId!)
-
+    let lastOrg = typeof window !== 'undefined' ? localStorage.getItem('orgId') : null;
 
     useEffect(() => {
         const getNotLogin = () => {
@@ -47,12 +47,12 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
             organizations.find((org: OrganizationModelType) => org.slug === slug);
 
             if (isLoginIn && getMyOrganization.length === 0 && pathname !== "/org") {
-                router.push('/org');
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
 
             if (isLoginIn && (pathname.includes('sign-in') || pathname.includes('sign-up'))) {
-                router.push(`/org/${getMyOrganization[0]?.slug}`);
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
             return null;

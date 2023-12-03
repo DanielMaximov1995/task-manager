@@ -6,9 +6,10 @@ import {
     ListModelType,
     ObjectIdType,
     OrganizationModelType,
-    UserModelType
+    UserModelType,
 } from "@/types/Schema"
 import UserModel from "@/utils/Database/models/UserModel"
+import LogModel from "@/utils/Database/models/LogModel"
 import {PasswordEmailType} from "@/types/others";
 import OrganizationModel from "../utils/Database/models/OrganizationModel";
 import {getServerSession , Session } from "next-auth";
@@ -16,6 +17,7 @@ import { authOptions } from '@/utils/authOptions'
 import BoardModel from "@/utils/Database/models/BoardModel";
 import ListModel from "@/utils/Database/models/ListModel";
 import CardModel from "@/utils/Database/models/CardModel";
+import {cookies} from "next/headers";
 
 export const getUsers =  async () => {
     try {
@@ -299,12 +301,12 @@ export const addNewList = async (data : ListModelType) => {
             throw Error("רשימה בשם הזה כבר קיים!")
         }
 
-        await ListModel.create({
+        const newList = await ListModel.create({
             ...data,
             order : listCounter++
         });
 
-        return JSON.parse(JSON.stringify({message : 'הרשימה התווספה בהצלחה !'}))
+        return JSON.parse(JSON.stringify({newList , message : 'הרשימה התווספה בהצלחה !'}))
     } catch (error) {
         throw error;
     }
@@ -516,4 +518,35 @@ export const cloneCard = async (card : CardModelType, list :ListModelType) => {
     } catch (err) {
         throw err
     }
+}
+
+type UpdateModel = "board" | "organization" | "list";
+export const addNewLog = async (action : string, type : "delete" | "add" | "update" , idOfModel : string , userId : string , updateModel : UpdateModel , orgId : string) => {
+    try {
+
+        await LogModel.create({
+            user : userId,
+            [updateModel] : idOfModel,
+            model : updateModel,
+            orgId,
+            type,
+            action
+        })
+
+        return JSON.parse(JSON.stringify({ message : `התווספה פעילות חדשה..` }));
+    } catch (err) {
+        throw err
+    }
+}
+export const getLogByOrg = async (organization : string) => {
+    try {
+        const data = await LogModel.find().populate("user").populate("board").populate("organization").populate("list").exec();
+        return JSON.parse(JSON.stringify(data))
+    } catch (err) {
+        throw err
+    }
+}
+
+export const updateCookie = (name : string , value : string) => {
+    return cookies().set(name, value)
 }

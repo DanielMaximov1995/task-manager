@@ -9,7 +9,7 @@ export const generateMetadata = async (props : PageAndLayoutType) => {
     const board = await getBoardsById(params?.boardId!)
 
     return {
-        title: board?.title || "Board",
+        title: board?.title || "לוח",
     };
 }
 

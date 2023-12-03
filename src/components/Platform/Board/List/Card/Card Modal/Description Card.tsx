@@ -3,21 +3,22 @@
 import {CardModalProp} from "@/components/Platform/Board/List/Card/Card Modal/Index Card Modal";
 import {ElementRef, useRef, useState} from "react";
 import {AlignIcon} from "@/components/Icons";
-import {updateCard} from "@/services/fetch";
+import {addNewLog, updateCard} from "@/services/fetch";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {useEventListener, useOnClickOutside} from "usehooks-ts";
 import { Button } from '@/components/ui/button'
 import { cn } from "@/utils/shadcn-utils"
+import {useSession} from "next-auth/react";
 
 const DescriptionCard = (props: CardModalProp) => {
-    const {card, handleChange} = props
+    const {card, handleChange , orgId} = props
     const [editMode, setEditMode] = useState(false);
     const descriptionRef = useRef<ElementRef<"textarea">>(null)
     const formRef = useRef<ElementRef<"form">>(null);
     const router = useRouter()
     const [showBtn, setShowBtn] = useState(false);
-
+    const { data } = useSession()
 
     const enableEditing = () => {
         setEditMode(true);
@@ -55,10 +56,11 @@ const DescriptionCard = (props: CardModalProp) => {
 
         toast.promise(updateCard({...card , description}),{
             loading : "מעדכן את תיאור הכרטיסיה...",
-            success : () => {
+            success : async () => {
                 router.refresh()
                 disableEditing()
                 handleChange && handleChange("description" , description)
+                await addNewLog(`עודכן תיאור לכרטיסיה ${card?.title}` , "update" , card?.listId! , data?.user?._id?.toString()! , "list" , orgId)
                 return `עודכן התיאור לכרטיסייה ${card.title}`
             },
             error : (data) => {

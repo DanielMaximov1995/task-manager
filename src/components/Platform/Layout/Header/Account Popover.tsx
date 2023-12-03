@@ -24,14 +24,13 @@ const AccountPopover = () => {
             </PopoverTrigger>
             <PopoverContent>
                 <div className='py-2'>
-                    <div className='flex justify-start gap-x-4'>
+                    <div className='flex justify-start items-center gap-x-4'>
                         <Avatar className='h-14 w-14 text-xl'>
                             <AvatarImage src={user?.avatar} />
                             <AvatarFallback>{user?.fName?.slice(0 , 1)} {user?.lName?.slice(0 , 1)}</AvatarFallback>
                         </Avatar>
                         <div className="">
                             <p className="m-0 tracking-widest font-semibold text-lg">{user?.fullName}</p>
-                            <p className="m-0 tracking-widest text-sm">שם החברה</p>
                         </div>
                     </div>
                     <Account user={user}/>

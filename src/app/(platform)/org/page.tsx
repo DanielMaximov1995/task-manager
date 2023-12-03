@@ -7,7 +7,7 @@ import AddEditOrg from "@/components/Platform/Auth/Organization/Add-Edit-Org";
 import AccountPopover from "@/components/Platform/Layout/Header/Account Popover";
 
 const OrgPage = async (props : PageAndLayoutType) => {
-    const { searchParams } = props
+    const { searchParams, params } = props
     let addNew  = (!!searchParams?.addNew).toString() as 'true' | 'false'
 
     const options = {

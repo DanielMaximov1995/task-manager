@@ -9,11 +9,12 @@ import {CustomEvent} from "@/types/others";
 type CardItemType = {
     index : number;
     card : CardModelType;
-    list : ListModelType
+    list : ListModelType;
+    orgId : string
 }
 
 const CardItem = (props : CardItemType) => {
-    const { index , card, list } = props
+    const { index , card, list, orgId } = props
     const [cardEdit, setCardEdit] = useState<CardModelType | null>(null);
     const [cardForm, setCardForm] = useState<CardModelType>(card);
 
@@ -41,7 +42,7 @@ const CardItem = (props : CardItemType) => {
                 )
             }
         </Draggable>
-        <CardModal handleChange={handleChange} onClose={() => setCardEdit(null)} isOpen={cardEdit?._id === card._id} card={cardForm} list={list}/>
+        <CardModal handleChange={handleChange} onClose={() => setCardEdit(null)} isOpen={cardEdit?._id === card._id} card={cardForm} list={list} />
         </>
     )
 }

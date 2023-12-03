@@ -6,12 +6,13 @@ import FloatLabelText from "@/components/Float Label Text";
 import {CustomEvent, CustomEventTarget, PageAndLayoutType} from "@/types/others";
 import {createSlug} from "@/services/slugIt";
 import { Button } from '@/components/ui/button'
-import {addNewOrganization, updateOrganization} from "@/services/fetch";
+import {addNewLog, addNewOrganization, updateOrganization} from "@/services/fetch";
 import {useEdgeStore} from "@/utils/edgeStore";
 import {toast} from "sonner";
 import {Progress} from "@/components/ui/progress";
 import {formatFileSize} from "@/components/Upload Files/Single Image Dropzone";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 export type OrgPropsType = {organization ?: OrganizationModelType}
 
@@ -26,6 +27,7 @@ const AddEditOrg = (props : OrgPropsType) => {
     const { edgestore } = useEdgeStore();
     const [progress, setProgress] = useState<number>(0);
     const router = useRouter()
+    const { data : session } = useSession()
 
     useEffect(() => {
         if(organization) {
@@ -102,7 +104,8 @@ const AddEditOrg = (props : OrgPropsType) => {
                     });
                 }
                     router.refresh()
-                    router.push(`/org/${org.slug}/settings`)
+                    await addNewLog(`בוצע עדכון של המידע בארגון` , "update" , organization?._id?.toString()! , session?.user?._id?.toString()! , "organization")
+                router.push(`/org/${org.slug}/settings`)
                     return `${org.name} עודכן בהצלחה...`
             },
             error : (data) => {

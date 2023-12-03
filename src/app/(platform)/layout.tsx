@@ -4,8 +4,6 @@ import IndexLayout from "@/components/Platform/Index Layout";
 
 const PlatformLayout = async (props : PageAndLayoutType) => {
     const { children , params } = props
-
-
     return (
         <RestrictedContent params={params}>
                 <IndexLayout>

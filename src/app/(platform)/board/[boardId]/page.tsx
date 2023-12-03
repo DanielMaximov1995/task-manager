@@ -8,7 +8,6 @@ export const dynamic = "force-dynamic"
 
 const BoardPage = async (props : PageAndLayoutType) => {
     const { params} = props
-
     const board = await getBoardsById(params?.boardId!)
 
     if (!board) {
@@ -19,7 +18,7 @@ const BoardPage = async (props : PageAndLayoutType) => {
 
     return (
         <div className='p-4 h-full overflow-x-auto'>
-            <ListContainer lists={list.sort((a : any , b : any) => a.order - b.order)} boardId={params?.boardId!}/>
+            <ListContainer lists={list.sort((a : any , b : any) => b.order - a.order)} boardId={params?.boardId!} board={board!}/>
         </div>
     )
 }

@@ -3,20 +3,23 @@
 import {ListModelType} from "@/types/Schema";
 import {ElementRef, useRef, useState} from "react";
 import {toast} from "sonner";
-import {updateBoard, updateList} from "@/services/fetch";
+import {addNewLog, updateBoard, updateList} from "@/services/fetch";
 import {useRouter} from "next/navigation";
 import {useEventListener} from "usehooks-ts";
 import ListOptions from "@/components/Platform/Board/List/List Options";
+import {useSession} from "next-auth/react";
 
 type ListHeaderType = {
     list : ListModelType;
-    onAddCard : () => void
+    onAddCard : () => void;
+    orgId : string;
 }
 
 const ListHeader = (props : ListHeaderType) => {
-    const { list, onAddCard } = props
+    const { list, onAddCard , orgId } = props
     const [title, setTitle] = useState(list.title);
     const [editMode, setEditMode] = useState(false);
+    const {data } = useSession()
 
     const formRef = useRef<ElementRef<"form">>(null);
     const inputRef = useRef<ElementRef<"input">>(null);
@@ -44,10 +47,11 @@ const ListHeader = (props : ListHeaderType) => {
         }
         toast.promise(updateList(list?._id?.toString()! , updatedList) , {
             loading : "מעדכן את שם הרשימה...",
-            success : () => {
-                router.refresh()
+            success : async () => {
                 setTitle(titleFromData)
                 setEditMode(false)
+                await addNewLog(`הרשימה ${list.title} עודכנה לשם ${updatedList.title}` , "update" , list?._id?.toString()! , data?.user?._id?.toString()! , "list" , orgId)
+                router.refresh()
                 return "שם הרשימה התעדכן..."
             },
             error : (data) => {
@@ -96,7 +100,7 @@ const ListHeader = (props : ListHeaderType) => {
                     {title}
                 </p>
             )}
-            <ListOptions list={list} onAddCard={onAddCard}/>
+            <ListOptions list={list} onAddCard={onAddCard} orgId={orgId}/>
         </div>
     )
 }

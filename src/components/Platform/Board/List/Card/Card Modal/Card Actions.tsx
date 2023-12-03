@@ -1,19 +1,22 @@
 'use client'
 import {CardModalProp} from "@/components/Platform/Board/List/Card/Card Modal/Index Card Modal";
 import { CopyIcon, SettingIcon, TrashIcon} from "@/components/Icons";
-import {cloneCard, deleteCard, updateCard} from "@/services/fetch";
+import {addNewLog, cloneCard, deleteCard, updateCard} from "@/services/fetch";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 const CardActions = (props: CardModalProp) => {
-    const { card, onClose, list } = props
+    const { card, onClose, list, orgId } = props
     const router = useRouter()
+    const { data : session } = useSession()
 
     const onDelete = () => {
         toast.promise(deleteCard(card.listId! , card?._id?.toString()!),{
             loading : "מוחק את הכרטיסייה...",
-            success : (data) => {
+            success : async (data) => {
                 router.refresh()
+                await addNewLog(`הכרטיסייה ${card.title} נמחקה ` , "delete" , card.listId! , session?.user?._id?.toString()! , "list" , orgId)
                 onClose && onClose()
                 return data.message
             },
@@ -26,9 +29,10 @@ const CardActions = (props: CardModalProp) => {
     const onCloned = () => {
         toast.promise(cloneCard(card , list!),{
             loading : "משכפל את הכרטיסייה...",
-            success : (data) => {
+            success : async (data) => {
                 router.refresh()
                 onClose && onClose()
+                await addNewLog(`הכרטיסייה ${card.title} שוכפלה ` , "add" , card.listId! , session?.user?._id?.toString()! , "list" , orgId)
                 return data.message
             },
             error : (data) => {

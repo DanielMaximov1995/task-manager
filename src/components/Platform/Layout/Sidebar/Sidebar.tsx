@@ -7,7 +7,7 @@ import PlusIcon from "@/components/Icons/Plus Icon";
 import {useParams, useRouter} from "next/navigation";
 import {Accordion} from "@/components/ui/accordion";
 import {useEffect, useState} from "react";
-import {getOrganizationByEmail} from "@/services/fetch";
+import {getOrganizationByEmail, updateCookie} from "@/services/fetch";
 import {OrganizationModelType} from "@/types/Schema";
 import {useOrganization} from "@/hooks/use-Organization";
 import {Skeleton} from "@/components/ui/skeleton";
@@ -23,6 +23,10 @@ const Sidebar = () => {
     const { organizations, loading } = useOrganization();
     const [expanded, setExpanded] = useState(decodeURIComponent(slug));
     const router = useRouter()
+
+    useEffect(() => {
+        localStorage.setItem("orgId" , decodeURIComponent(slug))
+    },[slug])
 
     if(loading) {
         return (
@@ -51,7 +55,7 @@ const Sidebar = () => {
                 variant='ghost'
                 className='mr-auto'
                 >
-                    <Link href='/org'>
+                    <Link href='/org?addNew=true'>
                         <PlusIcon fontSize={30}/>
                     </Link>
                 </Button>

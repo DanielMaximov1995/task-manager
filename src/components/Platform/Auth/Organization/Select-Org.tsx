@@ -10,7 +10,6 @@ import {useOrganization} from "@/hooks/use-Organization";
 const SelectOrg = () => {
     const { organizations } = useOrganization()
 
-
     return (
         <div className='flex flex-wrap'>
             <div className='p-2 py-4 w-full'>

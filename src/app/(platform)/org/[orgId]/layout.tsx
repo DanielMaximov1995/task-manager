@@ -1,21 +1,38 @@
-import NavbarPlatform from "@/components/Platform/Layout/Header/Navbar";
 import {PageAndLayoutType} from "@/types/others";
-import RestrictedContent from "@/components/RestrictedContent";
+import {getOrganizationSlug} from "@/services/fetch";
 import Sidebar from "@/components/Platform/Layout/Sidebar/Sidebar";
-import {getOrganizationByEmail, getOrganizationSlug} from "@/services/fetch";
+import MainBoard from "@/components/Platform/Organization/Borad/Main Board";
+import {Suspense} from "react";
+import Loading from "@/components/loading";
+
+export const generateMetadata  = async (props : PageAndLayoutType) => {
+    const { params } = props
+    const organization = await getOrganizationSlug(decodeURIComponent(params?.orgId!))
+
+    return {
+        title: {
+            template : `%s • ${organization.name}`,
+            default : organization.name
+        }
+    };
+}
 
 const LayoutOrg = async (props : PageAndLayoutType) => {
     const { children , params } = props
-    const getOrg = await getOrganizationSlug(decodeURIComponent(params?.orgId!))
+    let orgId = decodeURIComponent(params?.orgId!)
+    const getOrg = await getOrganizationSlug(orgId)
 
     return (
-            <main className='px-4 max-w-6xl 2xl:max-w-screen-xl mx-auto'>
+            <main className='px-4 max-w-7xl 2xl:max-w-screen-2xl mx-auto'>
                 <div className='flex gap-x-7'>
-                    <div className='w-72 pt-20 md:pt-24 shrink-0 px-2 hidden md:block h-screen shadow-[-10px_0px_12px_-6px_#0000000d]'>
+                    <div className='w-80 pt-20 md:pt-24 shrink-0 px-2 hidden md:block h-screen shadow-[-10px_0px_12px_-6px_#0000000d]'>
                         <Sidebar/>
                     </div>
-                <main className='pt-20 md:pt-24 px-2 md:px-10'>
-                {children}
+                <main className='pt-20 md:pt-24 px-2 w-full md:px-10'>
+                    <Suspense fallback={<Loading/>}>
+                        <MainBoard organization={getOrg}/>
+                        {children}
+                    </Suspense>
                 </main>
                 </div>
             </main>
