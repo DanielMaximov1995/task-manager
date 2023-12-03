@@ -27,7 +27,7 @@ const MobileSidebar = () => {
     return (
         <>
          <Button variant='ghost' size='sm' className='block md:hidden' onClick={onOpen}>
-            <MenuIcon/>
+            <MenuIcon fontSize={25}/>
          </Button>
             <div className='absolute'>
                 <Sheet open={isOpen} onOpenChange={onClose}>

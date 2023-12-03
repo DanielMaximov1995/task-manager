@@ -15,7 +15,7 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
     const isNotLoginIn = status === "unauthenticated";
     const pathname = usePathname();
     const router = useRouter();
-    const { onCreate , organizations , loading} = useOrganization();
+    const { onCreate } = useOrganization();
     let slug = decodeURIComponent(params?.orgId!)
     let lastOrg = typeof window !== 'undefined' ? localStorage.getItem('orgId') : null;
 
@@ -44,23 +44,24 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
             let getMyOrganization = await getOrganizationByEmail()
 
             if (isLoginIn && getMyOrganization.length === 0 && pathname !== "/org") {
-                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 await onCreate();
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
 
             if (isLoginIn && (pathname.includes('sign-in') || pathname.includes('sign-up'))) {
-                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 await onCreate();
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
 
             if (isLoginIn && pathname === "/") {
-                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 await onCreate();
+                !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
                 return null;
             }
 
+            await onCreate()
             return null;
         };
 

@@ -71,10 +71,16 @@ const NavbarPlatform = () => {
     return (
         <header className='fixed top-0 w-full z-high h-14 px-4 border-b shadow-sm bg-white flex items-center'>
             <MobileSidebar/>
-            <div className='md:max-w-screen-2xl max-w-screen-xl mx-auto flex items-center w-full justify-between'>
+            <div className='md:hidden flex w-full justify-center'>
                 <Logo label='מנהל המשימות' size={30}/>
-                <div className='space-x-4 md:block md:w-auto flex items-center md:justify-between justify-end w-full'>
+            </div>
+            <div className='md:max-w-screen-2xl max-w-screen-xl mx-auto flex items-center w-full justify-between'>
+                <div className='hidden md:block'>
+                    <Logo label='מנהל המשימות' size={30}/>
+                </div>
+                <div className='md:block md:w-auto flex items-center md:justify-between justify-end w-full'>
                     <div className='flex gap-x-4'>
+
                         <FormPopover sideOffset={18} align='start' side='bottom' formComp={<AddNewBoard organization={organization}/>}>
                             <div>
                                 <Button className="md:block hidden">חדש</Button>

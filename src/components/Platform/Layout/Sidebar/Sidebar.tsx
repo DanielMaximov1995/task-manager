@@ -22,7 +22,6 @@ const Sidebar = () => {
     const slug : any = params?.orgId
     const { organizations, loading } = useOrganization();
     const [expanded, setExpanded] = useState(decodeURIComponent(slug));
-    const router = useRouter()
 
     useEffect(() => {
         localStorage.setItem("orgId" , decodeURIComponent(slug))

@@ -12,9 +12,9 @@ const Logo = (props : LogoType) => {
 
     return (
         <Link href='/'>
-            <div className='hover:opacity-75 effect items-center gap-x-2 hidden md:flex'>
+            <div className='hover:opacity-75 effect items-center gap-x-2 flex'>
                 <Image src='/logo.png' alt='logo' height={size || 30} width={size || 30} />
-                {label && <p className='text-lg text-neutral-700 font-semibold pb-1'>{label}</p>}
+                {label && <p className='text-lg text-neutral-700 hidden md:block font-semibold pb-1'>{label}</p>}
             </div>
         </Link>
     )
