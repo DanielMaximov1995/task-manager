@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import {
     BoardModelType,
     CardModelType,
-    ListModelType,
+    ListModelType, LogModelType,
     ObjectIdType,
     OrganizationModelType,
     UserModelType,
@@ -541,7 +541,7 @@ export const getLogByOrg = async (organization : string) => {
 
         let getOrg = await OrganizationModel.findOne({ slug : organization })
         const data = await LogModel.find({orgId : getOrg?._id?.toString()!}).populate("user").populate("board").populate("organization").populate("list").exec();
-        const sortByDate = data.sort((a , b) => new Date(b.createdAt) - new Date(a.createdAt))
+        const sortByDate = data.sort((a , b) => (new Date(b?.createdAt)  as any) - (new Date(a?.createdAt) as any))
         return JSON.parse(JSON.stringify(data))
     } catch (err) {
         throw err
