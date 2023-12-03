@@ -31,7 +31,7 @@ const LogCard = (props : LogCardType) => {
             </div>
             <div>
                 <p className='m-0'>{log.action}</p>
-                <p className='m-0 text-sm'>ע"י {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
+                <p className='m-0 text-sm'>{'ע"י'} {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
             </div>
         </div>
     }
@@ -46,7 +46,7 @@ const LogCard = (props : LogCardType) => {
             </div>
             <div>
                 <p className='m-0'>{log.action}</p>
-                <p className='m-0 text-sm'>ע"י {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
+                <p className='m-0 text-sm'>{'ע"י'} {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
             </div>
         </div>
     }
@@ -61,7 +61,7 @@ const LogCard = (props : LogCardType) => {
             </div>
             <div>
                 <p className='m-0'>{log.action}</p>
-                <p className='m-0 text-sm'>ע"י {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
+                <p className='m-0 text-sm'>{'ע"י'} {user?.fullName} • {formattedDate(log?.createdAt!)}</p>
             </div>
         </div>
     }

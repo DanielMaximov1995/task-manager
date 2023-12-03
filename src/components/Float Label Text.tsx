@@ -1,8 +1,7 @@
 'use client'
 
 import {CustomEvent} from "@/types/others";
-import {HTMLProps, InputHTMLAttributes, useState} from "react";
-import VisibleIcon from "@/components/Icons/Visible Icon";
+import { InputHTMLAttributes, useState} from "react";
 
 type FloatType = {
     handleChange?: (e: CustomEvent) => void;
@@ -17,6 +16,7 @@ type FloatType = {
 } & InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>
 
 import { cn } from "@/utils/shadcn-utils"
+import { VisibleIcon } from "./Icons";
 
 
 const FloatLabelText = (props: FloatType) => {
@@ -68,7 +68,7 @@ const FloatLabelText = (props: FloatType) => {
             {options[input]}
             <label
                 htmlFor={name}
-                className='absolute right-2 -top-3 text-sm right-4 effect px-[1px] bg-white text-neutral-400 peer-focus:bg-white peer-focus:text-neutral-800 peer-focus:text-sm peer-focus:-top-3 md:peer-placeholder-shown:text-[18px] peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-2 peer-placeholder-shown:text-neutral-400'>
+                className='absolute right-2 -top-3 text-sm effect px-[1px] bg-white text-neutral-400 peer-focus:bg-white peer-focus:text-neutral-800 peer-focus:text-sm peer-focus:-top-3 md:peer-placeholder-shown:text-[18px] peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-2 peer-placeholder-shown:text-neutral-400'>
                 {label}
             </label>
         </div>

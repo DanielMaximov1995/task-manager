@@ -1,9 +1,8 @@
 'use client'
 import { redirect , usePathname ,useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import {useEffect, useState, FC, ReactNode} from 'react'
-import {OrganizationModelType} from "@/types/Schema";
-import {getAllOrganization, getOrganizationByEmail} from "@/services/fetch";
+import {useEffect, FC} from 'react'
+import {getOrganizationByEmail} from "@/services/fetch";
 import {PageAndLayoutType} from "@/types/others";
 import {useOrganization} from "@/hooks/use-Organization";
 import Loading from "@/components/loading";
@@ -42,29 +41,30 @@ const RestrictedContent: FC<PageAndLayoutType> = (props) => {
 
     useEffect(() => {
         const getOrganization = async () => {
-            await onCreate();
             let getMyOrganization = await getOrganizationByEmail()
-            organizations.find((org: OrganizationModelType) => org.slug === slug);
 
             if (isLoginIn && getMyOrganization.length === 0 && pathname !== "/org") {
                 !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
+                await onCreate();
                 return null;
             }
 
             if (isLoginIn && (pathname.includes('sign-in') || pathname.includes('sign-up'))) {
                 !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
+                await onCreate();
                 return null;
             }
 
             if (isLoginIn && pathname === "/") {
                 !lastOrg ? router.push('/org') : router.push(`/org/${lastOrg}`);
+                await onCreate();
                 return null;
             }
 
             return null;
         };
 
-        if (sessionData?.user) {
+        if (isLoginIn) {
             getOrganization();
         }
     }, [sessionData?.user]);

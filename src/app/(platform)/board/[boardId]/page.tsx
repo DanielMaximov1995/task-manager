@@ -1,18 +1,14 @@
-import { notFound } from 'next/navigation'
 import {PageAndLayoutType} from "@/types/others";
 import {getBoardsById, getListByBordId} from "@/services/fetch";
-import ListContainer from "@/components/Platform/Board/List/List Container";
 import {ListModelType} from "@/types/Schema";
+import dynamicNext from 'next/dynamic';
+const ListContainer = dynamicNext(() => import("@/components/Platform/Board/List/List Container"), { ssr: false });
 
 export const dynamic = "force-dynamic"
 
 const BoardPage = async (props : PageAndLayoutType) => {
     const { params} = props
     const board = await getBoardsById(params?.boardId!)
-
-    if (!board) {
-        notFound();
-    }
 
     const list : ListModelType[] = await getListByBordId(board?._id)
 

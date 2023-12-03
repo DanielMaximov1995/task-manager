@@ -4,7 +4,6 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import RestrictedContentAuth from "@/components/RestrictedContentAuth";
-import {redirect} from "next/navigation";
 
 type ButtonOptions = {
     label: string;

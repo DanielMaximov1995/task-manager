@@ -1,9 +1,8 @@
 import {PageAndLayoutType} from "@/types/others";
 import {getBoardsByOrgId, getOrganizationSlug} from "@/services/fetch";
 import {OrganizationModelType} from "@/types/Schema";
-import BoardList from "@/components/Platform/Organization/Borad/Board List";
-import { Suspense } from 'react'
-import IndexOrganization from "@/components/Platform/Organization";
+import dynamicNext from 'next/dynamic';
+const IndexOrganization = dynamicNext(() => import("@/components/Platform/Organization") , { ssr : false });
 import {redirect} from "next/navigation";
 
 export const dynamic = "force-dynamic"

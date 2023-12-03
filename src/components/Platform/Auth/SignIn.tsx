@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from 'sonner';
 import { signIn } from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 type UserLogin = {
     email: string;
@@ -18,6 +19,8 @@ const SignIn = () => {
         email: '',
         password: ""
     });
+    const router = useRouter()
+    let lastOrg = typeof window !== 'undefined' ? localStorage.getItem('orgId') : null;
 
     const handleChange = (e: CustomEvent) => {
         const {name, value} = e.target
@@ -32,7 +35,10 @@ const SignIn = () => {
 
         toast.promise(signIn('credentials' , { redirect : false , email : user.email , password : user.password }),{
             loading : "מתחבר למשתמש...",
-            success : "החיבור בוצעה בהצלחה !",
+            success : async () => {
+                lastOrg? router.push(`/org/${lastOrg}`) : router.push('org')
+                return "החיבור בוצעה בהצלחה !"
+            },
             error : "אימייל/סיסמה שגויים!"
         })
 

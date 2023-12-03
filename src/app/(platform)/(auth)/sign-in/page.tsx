@@ -1,8 +1,5 @@
-import React from 'react'
 import dynamicNext from 'next/dynamic';
-import Logo from "@/components/Logo";
-import RestrictedContent from '@/components/RestrictedContent';
-const SignInComp = dynamicNext(() => import('@/components/Platform/Auth/SignIn'))
+const SignInComp = dynamicNext(() => import('@/components/Platform/Auth/SignIn') , { ssr : false })
 
 export const dynamic = 'force-dynamic'
 

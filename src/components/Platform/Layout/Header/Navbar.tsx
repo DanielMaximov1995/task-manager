@@ -11,7 +11,7 @@ import {FormPopover} from "@/components/Form Popover";
 import {getOrganizationByBoardId, getOrganizationSlug} from "@/services/fetch";
 import {useEffect, useState} from "react";
 import {OrganizationModelType} from "@/types/Schema";
-import {redirect, useParams} from "next/navigation";
+import {notFound, redirect, useParams, usePathname, useRouter} from "next/navigation";
 import Loading from "@/components/loading";
 import {Skeleton} from "@/components/ui/skeleton";
 
@@ -24,17 +24,25 @@ const NavbarPlatform = () => {
     let orgId = decodeURIComponent(params?.orgId! as string)
     let boardId = decodeURIComponent(params?.boardId! as string)
     const authIsLoading = status === 'loading'
+    const pathname = usePathname()
+    const router = useRouter()
 
     useEffect(() => {
         const getOrganization = async () => {
-            let data
-            if(orgId && orgId !== "undefined") {
-                data = await getOrganizationSlug(orgId)
+            try {
+                let data
+
+                if(orgId && orgId !== "undefined") {
+                    data = await getOrganizationSlug(orgId)
+                }
+                if(boardId && boardId !== "undefined") {
+                    data = await getOrganizationByBoardId(boardId)
+                }
+                setOrganization(data)
+            } catch (err) {
+                router.push("/org")
+                return null
             }
-            if(boardId && boardId !== "undefined") {
-                data = await getOrganizationByBoardId(boardId)
-            }
-            setOrganization(data)
         }
 
         getOrganization()

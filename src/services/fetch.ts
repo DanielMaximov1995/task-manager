@@ -18,6 +18,7 @@ import BoardModel from "@/utils/Database/models/BoardModel";
 import ListModel from "@/utils/Database/models/ListModel";
 import CardModel from "@/utils/Database/models/CardModel";
 import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
 
 export const getUsers =  async () => {
     try {
@@ -217,7 +218,7 @@ export const getBoardsById = async (id : string) => {
         let data = await BoardModel.findById(id)
         return JSON.parse(JSON.stringify(data))
     } catch (error) {
-        throw error;
+        throw { find : false , error };
     }
 }
 

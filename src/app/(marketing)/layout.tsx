@@ -1,5 +1,7 @@
 import {PageAndLayoutType} from "@/types/others";
-import Navbar from "@/components/Marketing/Navbar";
+import dynamic from 'next/dynamic'
+const Navbar = dynamic(() => import("@/components/Marketing/Navbar") , { ssr : false });
+
 
 const MarketingLayout = (props: PageAndLayoutType) => {
     const {children} = props
