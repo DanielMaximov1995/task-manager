@@ -32,7 +32,7 @@ const FloatLabelPassword = forwardRef<HTMLTextAreaElement , FloatType>((props, r
             />
             <label
                 htmlFor={name}
-                className='absolute right-2 -top-3 text-sm effect px-[1px] bg-white text-neutral-400 peer-focus:bg-white peer-focus:text-neutral-800 peer-focus:text-sm peer-focus:-top-3 md:peer-placeholder-shown:text-sm peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-1 peer-placeholder-shown:text-neutral-400'>
+                className='absolute right-2 -top-3 text-sm effect px-[1px] bg-white text-neutral-400 peer-focus:bg-white peer-focus:text-neutral-800 peer-focus:text-sm peer-focus:-top-3 md:peer-placeholder-shown:text-[18px] peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-2 peer-placeholder-shown:text-neutral-400'>
                 {label}
             </label>
         </div>
