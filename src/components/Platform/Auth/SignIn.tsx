@@ -69,7 +69,6 @@ const SignIn = () => {
             </div>
             <div className="w-full flex justify-between items-center px-2">
                 <Link className="text-blue-500 font-semibold tracking-wider hover:tracking-widest hover:text-blue-700 effect" href='/sign-up'>אין חשבון?</Link>
-                <Link className="text-blue-500 font-semibold tracking-wider hover:tracking-widest hover:text-blue-700 effect" href='/forgot-password'>שכחת סיסמה?</Link>
             </div>
         </form>
     )
