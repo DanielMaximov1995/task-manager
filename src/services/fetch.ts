@@ -538,7 +538,10 @@ export const addNewLog = async (action : string, type : "delete" | "add" | "upda
 }
 export const getLogByOrg = async (organization : string) => {
     try {
-        const data = await LogModel.find().populate("user").populate("board").populate("organization").populate("list").exec();
+
+        let getOrg = await OrganizationModel.findOne({ slug : organization })
+        const data = await LogModel.find({orgId : getOrg?._id?.toString()!}).populate("user").populate("board").populate("organization").populate("list").exec();
+        const sortByDate = data.sort((a , b) => new Date(b.createdAt) - new Date(a.createdAt))
         return JSON.parse(JSON.stringify(data))
     } catch (err) {
         throw err
