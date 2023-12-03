@@ -28,7 +28,7 @@ const FloatLabelPassword = forwardRef<HTMLTextAreaElement , FloatType>((props, r
                 type={showPass ? "text" : "password"}
                 name={name}
                 {...other}
-                className={cn('input peer no-spinners outline-0 py-1 resize-none w-full focus-visible:ring-0 focus-visible:ring-offset-0 ring-0 focus:ring-0 shadow-sm' , className)}
+                className={cn('input peer no-spinners no-resize' , className)}
             />
             <label
                 htmlFor={name}
