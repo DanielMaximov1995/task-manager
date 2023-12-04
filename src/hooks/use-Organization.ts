@@ -27,5 +27,12 @@ export const useOrganization = create<OrganizationStore>((set) => ({
             ),
             loading : false
         }))
+    },
+    onDeleteOrganization : (slug : string) => {
+        set({loading : true})
+        set((state) => ({
+            organizations: state.organizations.filter((org) => org.slug !== slug),
+            loading : false
+        }))
     }
 }));

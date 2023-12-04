@@ -47,6 +47,7 @@ export type CardModelType = {
     title : string;
     order ?: number;
     description ?: string;
+    orgId : string
 
     createdAt?: Date;
     updatedAt?: Date;
@@ -58,6 +59,7 @@ export type ListModelType = {
     title : string;
     order ?: number;
     cards ?: CardModelType[];
+    orgId : string
 
     createdAt?: Date;
     updatedAt?: Date;

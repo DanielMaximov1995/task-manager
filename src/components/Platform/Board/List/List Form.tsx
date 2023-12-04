@@ -42,7 +42,7 @@ const ListForm = (props : ListContainerType) => {
 
     const onSubmit = (e : FormEvent) => {
         e.preventDefault()
-        let list = { title , boardId }
+        let list = { title , boardId , orgId : board?.orgId! }
 
         toast.promise(addNewList(list) ,{
             loading : "מוסיף רשימה חדשה...",

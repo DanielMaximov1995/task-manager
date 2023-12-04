@@ -4,6 +4,7 @@ import { ListModelType} from "@/types/Schema";
 
 const ListModel = new mongoose.Schema<ListModelType>({
     boardId: { type: String, required: true },
+    orgId: { type: String, required: true },
     title: { type: String, required: true },
     order: { type: Number, required: true },
     cards: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'card' }],

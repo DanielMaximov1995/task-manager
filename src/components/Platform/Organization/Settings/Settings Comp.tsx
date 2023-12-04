@@ -10,7 +10,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import {toast} from "sonner";
-import {addNewLog, updateOrganization} from "@/services/fetch";
+import {addNewLog, deleteOrgById, updateOrganization} from "@/services/fetch";
 import {useRouter} from "next/navigation";
 import {useOrganization} from "@/hooks/use-Organization";
 
@@ -21,7 +21,7 @@ const SettingsComp = (props: OrgSettingsType) => {
     const isAdmin = organization.admin?.find(emailMember => emailMember === session?.user?.email)
     const lastAdmin = isAdmin && organization.admin?.length === 1
     const router = useRouter()
-    const { onUpdateOrganization } = useOrganization()
+    const { onUpdateOrganization , onDeleteOrganization } = useOrganization()
 
     const handleLeaveOrganization = () => {
         const updateOrg = {
@@ -36,7 +36,23 @@ const SettingsComp = (props: OrgSettingsType) => {
                 onUpdateOrganization(organization.slug , updateOrg)
                 await addNewLog(`${session?.user?.fullName} עזב את הארגון` , "delete" , organization?._id?.toString()! , session?.user?._id?.toString()! , "organization" , organization?._id?.toString()!)
                 router.refresh()
+                router.push('/org')
                 return "יצאת מהארגון!"
+            },
+            error : (data) => {
+                return data.message
+            }
+        })
+    }
+
+    const onDelete = () => {
+        toast.promise(deleteOrgById(organization?._id?.toString()!), {
+            loading : "מוחק את הארגון...",
+            success : async (data) => {
+                onDeleteOrganization(organization.slug)
+                router.refresh()
+                router.push('/org')
+                return data.message
             },
             error : (data) => {
                 return data.message
@@ -71,9 +87,12 @@ const SettingsComp = (props: OrgSettingsType) => {
                             }
                         </Tooltip>
                     </TooltipProvider>
+                    {
+                        isAdmin &&
                     <Button variant='outline'
                             className='w-full border-red-600 text-red-600 hover:bg-red-600/10 text-md hover:text-red-600'>מחק
                         את הארגון</Button>
+                    }
                 </div>
             </div>
         </div>

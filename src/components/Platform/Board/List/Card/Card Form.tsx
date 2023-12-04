@@ -39,7 +39,7 @@ const CardForm = forwardRef<HTMLTextAreaElement , CardFormType>((props, ref) => 
     const onSubmit = (formData: FormData) => {
         const title = formData.get("title") as string;
 
-        toast.promise(addNewCard({title } , listId),{
+        toast.promise(addNewCard({title , orgId} , listId),{
             loading : "מצרף כרטיסייה חדשה...",
             success : async (data) => {
                 disableEditing()

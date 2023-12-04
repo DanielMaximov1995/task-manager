@@ -204,6 +204,20 @@ export const updateOrganization = async (slug : string , data: OrganizationModel
     }
 }
 
+export const deleteOrgById = async (orgId : string) => {
+    try {
+        await BoardModel.deleteMany({orgId})
+        await LogModel.deleteMany({orgId})
+        await ListModel.deleteMany({orgId})
+        await CardModel.deleteMany({orgId})
+        await OrganizationModel.findByIdAndDelete(orgId)
+
+        return JSON.parse(JSON.stringify({ message : 'נמחק בהצלחה' }));
+    } catch (err) {
+        throw err
+    }
+}
+
 export const getAllBoards = async () => {
     try {
         let data = await BoardModel.find()
