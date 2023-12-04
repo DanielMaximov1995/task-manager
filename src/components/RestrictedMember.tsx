@@ -16,11 +16,17 @@ const RestrictedMemberContent = (props : PropsTypeMember) => {
     const { children, organization } = props;
     const { status, data: sessionData } = useSession();
     const isLoadingAuth = status === "loading";
+    const isNotAuth = status === "unauthenticated";
     const router = useRouter();
-    const checkMember = organization.members.includes(sessionData?.user?._id?.toString()!)
+    const checkMember = organization.members.includes(sessionData?.user?.email!)
 
     if(isLoadingAuth) {
         return <Loading/>
+    }
+
+    if(isNotAuth) {
+        router.push('/org')
+        return null
     }
 
     if(!checkMember) {
