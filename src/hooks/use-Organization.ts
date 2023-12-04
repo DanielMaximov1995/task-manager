@@ -7,6 +7,7 @@ type OrganizationStore = {
     onCreate : () => void;
     onUpdateOrganization: (slug: string, data : OrganizationModelType) => void;
     onDeleteOrganization: (slug: string) => void;
+    onAddOrganization: (data : OrganizationModelType) => void;
     loading : boolean
 };
 
@@ -17,6 +18,13 @@ export const useOrganization = create<OrganizationStore>((set) => ({
         set({loading : true})
         const organizations = await getOrganizationByEmail();
         set({ organizations , loading : false});
+    },
+    onAddOrganization : (data) => {
+        set({loading : true})
+        set((state) => ({
+            organizations : [...state.organizations , data],
+            loading : false
+        }))
     },
     onUpdateOrganization : (slug , data) => {
         set({loading : true})

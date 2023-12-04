@@ -1,10 +1,12 @@
 import NedalIcon from "@/components/Icons/Medal Icon";
 import {Button} from "@/components/ui/button";
 import Link from 'next/link'
+import RestrictedCheckAuth from "@/components/RestrictedCheckAuth";
 
 const MarketingPage = () => {
 
     return (
+        <RestrictedCheckAuth>
         <div className='flex items-center justify-center flex-col'>
             <div className='flex items-center justify-center flex-col'>
                 <div
@@ -29,6 +31,7 @@ const MarketingPage = () => {
                 <Link href='/sign-in'>הכנס למנהל המשימות</Link>
             </Button>
         </div>
+        </RestrictedCheckAuth>
     )
 }
 export default MarketingPage

@@ -269,14 +269,26 @@ export const updateBoard = async (id : string , data: BoardModelType) => {
     }
 }
 
-export const deleteBoard = async (id : string) => {
+export const deleteBoard = async (id: string) => {
     try {
+        let getAllBoardList = await ListModel.find({ boardId: id });
+
+        await Promise.all(getAllBoardList.map(async (list) => {
+            let getListCard = list.cards;
+            for (const cardId of getListCard) {
+                await CardModel.findByIdAndDelete(cardId);
+            }
+            return list;
+        }));
+
+        await ListModel.deleteMany({ boardId: id });
         await BoardModel.findByIdAndDelete(id);
-        return JSON.parse(JSON.stringify({ message : 'הלוח נמחק בהצלחה' }));
+
+        return { message: 'הלוח נמחק בהצלחה' };
     } catch (err) {
         throw err;
     }
-}
+};
 
 export const getAllList = async () => {
     try {
@@ -353,9 +365,10 @@ export const cloneListAndCards = async (listId : string) => {
             throw Error("רשימה לא קיימת כדי לשכפל...")
         }
 
-        const { _id, order, createdAt , updatedAt , cards , title , boardId , ...clonedList } = originalList;
+        const { _id, order, createdAt , updatedAt , cards , title , boardId , orgId } = originalList;
 
         const newList = new ListModel({
+            orgId,
             boardId,
             title : `${title} העתק`,
             order : listCounter++,
@@ -364,7 +377,7 @@ export const cloneListAndCards = async (listId : string) => {
         const clonedCards = await Promise.all(
             originalList.cards.map(async (originalCard: CardModelType) => {
                 const { _id, createdAt, updatedAt , title , order , description } = originalCard;
-                const clonedCardDocument = await CardModel.create({ title , order , description , listId : newList._id });
+                const clonedCardDocument = await CardModel.create({ title , order , orgId , description , listId : newList._id });
                 return clonedCardDocument._id;
             })
         );

@@ -19,7 +19,7 @@ const AccountPopover = () => {
             <PopoverTrigger>
                 <Avatar className='cursor-pointer'>
                     <AvatarImage src={user?.avatar} />
-                    <AvatarFallback>{user?.fName?.slice(0 , 1)} {user?.lName?.slice(0 , 1)}</AvatarFallback>
+                    <AvatarFallback className='text-lg'>{user?.fName?.slice(0 , 1)} {user?.lName?.slice(0 , 1)}</AvatarFallback>
                 </Avatar>
             </PopoverTrigger>
             <PopoverContent>

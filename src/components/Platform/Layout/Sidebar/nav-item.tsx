@@ -41,7 +41,7 @@ const NavItem = (props: NavItemProps) => {
                     <div className='flex items-center gap-x-2'>
                             <Avatar>
                                 <AvatarImage src={organization?.imageUrl} />
-                                <AvatarFallback>{organization?.name.slice(0 , 1)}</AvatarFallback>
+                                <AvatarFallback className='text-2xl'>{organization?.name.slice(0 , 1)}</AvatarFallback>
                             </Avatar>
                         <span className={`${isActive && isExpanded ? "font-semibold tracking-widest" : "font-medium tracking-normal"} effect text-md`}>{organization.name}</span>
                     </div>

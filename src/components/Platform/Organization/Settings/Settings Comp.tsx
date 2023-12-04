@@ -89,7 +89,7 @@ const SettingsComp = (props: OrgSettingsType) => {
                     </TooltipProvider>
                     {
                         isAdmin &&
-                    <Button variant='outline'
+                    <Button onClick={onDelete} variant='outline'
                             className='w-full border-red-600 text-red-600 hover:bg-red-600/10 text-md hover:text-red-600'>מחק
                         את הארגון</Button>
                     }

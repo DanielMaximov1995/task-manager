@@ -14,6 +14,7 @@ import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
 import FloatLabelTextArea from "@/components/Float Text/Float Label Text Area";
 import FloatLabelText from "@/components/Float Text/Float Label Text";
+import {useOrganization} from "@/hooks/use-Organization";
 
 export type OrgPropsType = {organization ?: OrganizationModelType}
 
@@ -29,10 +30,11 @@ const AddEditOrg = (props : OrgPropsType) => {
     const [progress, setProgress] = useState<number>(0);
     const router = useRouter()
     const { data : session } = useSession()
+    const { onAddOrganization , onUpdateOrganization } = useOrganization()
 
     useEffect(() => {
         if(organization) {
-            setOrg(organization)
+           return  setOrg(organization)
         }
     },[])
 
@@ -105,6 +107,7 @@ const AddEditOrg = (props : OrgPropsType) => {
                     });
                 }
                     router.refresh()
+                    onUpdateOrganization(organization?.slug! , org)
                     await addNewLog(`בוצע עדכון של המידע בארגון` , "update" , organization?._id?.toString()! , session?.user?._id?.toString()! , "organization" , organization?._id?.toString()!)
                 router.push(`/org/${org.slug}/settings`)
                     return `${org.name} עודכן בהצלחה...`
@@ -128,6 +131,7 @@ const AddEditOrg = (props : OrgPropsType) => {
                             url: org.imageUrl,
                         });
                     }
+                    onAddOrganization(data.newOrg)
                     router.push(`/org/${data.newOrg.slug}`)
                     return "הארגון התווסף בהצלחה !"
                 },

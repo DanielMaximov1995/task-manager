@@ -5,6 +5,7 @@ import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 import {CloseIcon, UploadIcon} from "@/components/Icons";
 import { Button } from "@/components/ui/button"
+import Image from "next/image";
 
 const variants = {
     base: 'relative rounded-full flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
@@ -134,10 +135,11 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                     <input ref={ref} {...getInputProps()} />
 
                     {imageUrl ? (
-                        <img
+                        <Image
                             className="h-full w-full rounded-full object-cover"
                             src={imageUrl}
                             alt={acceptedFiles[0]?.name}
+                            fill={true}
                         />
                     ) : (
                         <div className="flex flex-col items-center justify-center text-xs text-gray-400">
