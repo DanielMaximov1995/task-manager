@@ -5,6 +5,7 @@ import MainBoard from "@/components/Platform/Organization/Borad/Main Board";
 import {Suspense} from "react";
 import Loading from "@/components/loading";
 import {redirect} from "next/navigation";
+import RestrictedMemberContent from "@/components/RestrictedMember";
 
 export const generateMetadata  = async (props : PageAndLayoutType) => {
     const { params } = props
@@ -32,6 +33,7 @@ const LayoutOrg = async (props : PageAndLayoutType) => {
     }
 
     return (
+        <RestrictedMemberContent organization={getOrg}>
             <main className='px-4 max-w-7xl 2xl:max-w-screen-2xl mx-auto'>
                 <div className='flex gap-x-7'>
                     <div className='w-80 pt-20 md:pt-24 shrink-0 px-2 hidden md:block h-screen shadow-[-10px_0px_12px_-6px_#0000000d]'>
@@ -45,6 +47,7 @@ const LayoutOrg = async (props : PageAndLayoutType) => {
                 </main>
                 </div>
             </main>
+        </RestrictedMemberContent>
     )
 }
 export default LayoutOrg
