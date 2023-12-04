@@ -6,6 +6,7 @@ type OrganizationStore = {
     organizations: OrganizationModelType[];
     onCreate : () => void;
     onUpdateOrganization: (slug: string, data : OrganizationModelType) => void;
+    onDeleteOrganization: (slug: string) => void;
     loading : boolean
 };
 
