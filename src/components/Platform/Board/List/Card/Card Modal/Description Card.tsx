@@ -50,7 +50,7 @@ const DescriptionCard = (props: CardModalProp) => {
             return;
         }
 
-        if(!description) {
+        if(!description && !card.description) {
             return disableEditing()
         }
 

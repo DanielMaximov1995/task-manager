@@ -21,7 +21,7 @@ const PageActivity = async (props : PageAndLayoutType) => {
     }
 
     return (
-        <div>
+        <div className='h-[36vw] overflow-y-auto'>
             {
                 getLogs.map(( log : LogModelType, index : number ) => (
                     <div className='w-[380px] py-1' key={index}>
