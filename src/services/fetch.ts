@@ -62,7 +62,8 @@ export const addNewUser =  async (data : UserModelType) => {
 
 export const updateUser = async (id : ObjectIdType , data: UserModelType) => {
     try {
-        await UserModel.findOneAndUpdate({ _id: id }, data);
+        let getData = await UserModel.findById(id)
+        await UserModel.findOneAndUpdate({ _id: id }, {...data, password : getData.password});
         return JSON.parse(JSON.stringify({ message : 'התעדכן בהצלחה' }));
     } catch (err) {
         throw err;

@@ -8,16 +8,17 @@ import Account from "./Account";
 import { useRouter , redirect } from 'next/navigation'
 import Link from "next/link";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {cn} from "@/utils/shadcn-utils";
 
 const AccountPopover = () => {
-    const router = useRouter()
     const {data} = useSession()
     let user = data?.user
 
+
     return (
         <Popover>
-            <PopoverTrigger>
-                <Avatar className='cursor-pointer'>
+            <PopoverTrigger className={cn('cursor-pointer', !user && "pointer-events-none opacity-0")}>
+                <Avatar>
                     <AvatarImage src={user?.avatar} />
                     <AvatarFallback className='text-lg'>{user?.fName?.slice(0 , 1)} {user?.lName?.slice(0 , 1)}</AvatarFallback>
                 </Avatar>

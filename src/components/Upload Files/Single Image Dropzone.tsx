@@ -153,9 +153,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
                     {
                         progress > 0 && progress !== 100 ?
-                    <Progress value={progress} className='m-2'/> : null
+                    <Progress value={progress} className='m-2 w-36'/> : null
                     }
-                    {/* Remove Image Icon */}
                     {imageUrl && !disabled && (
                         <div
                             className="group absolute right-5 top-5 -translate-y-1/4 translate-x-1/4 transform"
