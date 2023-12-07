@@ -8,7 +8,7 @@ import {MoreHorizontalIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {toast} from "sonner";
-import {addNewBoard, deleteBoard} from "@/services/fetch";
+import {addNewBoard, addNewLog, deleteBoard} from "@/services/fetch";
 import {useRouter} from "next/navigation";
 
 export type BoardNavBarType = {
@@ -19,8 +19,8 @@ export type BoardNavBarType = {
 
 const BoardNavbar = (props: BoardNavBarType) => {
     const {board, organization} = props
-    const {data} = useSession()
-    const isAdmin = !!organization?.admin?.find(email => data?.user?.email === email)
+    const {data : session} = useSession()
+    const isAdmin = !!organization?.admin?.find(email => session?.user?.email === email)
     const [loading, setLoading] = useState(false);
     const router = useRouter()
 
@@ -30,6 +30,7 @@ const BoardNavbar = (props: BoardNavBarType) => {
             loading: "מוחק את הלוח...",
             success: async (data) => {
                 router.refresh()
+                await addNewLog(`הלוח ${board.title} נמחק` , "delete" , board?._id?.toString()! , session?.user?._id?.toString()! , "board" , board?.orgId)
                 router.push(`/org/${organization.slug}`)
                 return data.message
             },
