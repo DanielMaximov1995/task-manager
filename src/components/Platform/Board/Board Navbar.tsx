@@ -30,7 +30,7 @@ const BoardNavbar = (props: BoardNavBarType) => {
             loading: "מוחק את הלוח...",
             success: async (data) => {
                 router.refresh()
-                await addNewLog(`הלוח ${board.title} נמחק` , "delete" , board?._id?.toString()! , session?.user?._id?.toString()! , "board" , board?.orgId)
+                await addNewLog(`הלוח ${board.title} נמחק` ,"delete" , board?._id?.toString()! , session?.user?._id?.toString()! , "board" , board?.orgId)
                 router.push(`/org/${organization.slug}`)
                 return data.message
             },

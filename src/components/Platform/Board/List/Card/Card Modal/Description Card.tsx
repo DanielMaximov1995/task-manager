@@ -87,7 +87,7 @@ const DescriptionCard = (props: CardModalProp) => {
                                         </div>
                                     </form>
                                     : <div className='pr-3 pt-2 h-16 rounded-md mr-3 bg-neutral-300'  role='button' onClick={enableEditing}>
-                                    <p className='m-0'>
+                                    <p className='m-0 whitespace-pre'>
                                     {card.description || "הוסף תיאור מפורט יותר..."}
                                     </p>
                                 </div>
